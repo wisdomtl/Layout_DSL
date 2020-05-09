@@ -1,0 +1,2 @@
+rootProject.name='Layout_dsl'
+include ':app'
