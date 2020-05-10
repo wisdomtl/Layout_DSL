@@ -17,20 +17,7 @@ import taylor.com.dsl.*
  */
 class FirstFragment : Fragment() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return buildViewByClDsl()
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-    }
-
-    private fun buildViewByClDsl(): View =
+    private val rootView by lazy {
         ConstraintLayout {
             layout_width = match_parent
             layout_height = match_parent
@@ -197,6 +184,14 @@ class FirstFragment : Fragment() {
             }
 
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return rootView
+    }
 
     private fun onBackClick() {
         activity?.finish()
