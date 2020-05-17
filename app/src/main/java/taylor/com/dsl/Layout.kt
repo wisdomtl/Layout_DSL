@@ -49,6 +49,12 @@ inline fun ViewGroup.NestedScrollView(init: NestedScrollView.() -> Unit) =
 inline fun ViewGroup.RecyclerView(init: RecyclerView.() -> Unit) =
     RecyclerView(context).apply(init).also { addView(it) }
 
+inline fun ViewGroup.ConstraintLayout(init: ConstraintLayout.() -> Unit) =
+    ConstraintLayout(context).apply(init).also { addView(it) }
+
+inline fun ViewGroup.FrameLayout(init: FrameLayout.() -> Unit) =
+    FrameLayout(context).apply(init).also { addView(it) }
+
 inline fun ConstraintLayout.Guideline(init: Guideline.() -> Unit) =
     Guideline(context).apply(init).also { addView(it) }
 
@@ -485,14 +491,6 @@ inline var TextView.textColor: String
         setTextColor(Color.parseColor(value))
     }
 
-inline var TextView.gravity: Int
-    get() {
-        return 0
-    }
-    set(value) {
-        gravity = value
-    }
-
 inline var TextView.fontFamily: Int
     get() {
         return 0
@@ -633,9 +631,9 @@ fun String.toLayoutId(): Int {
     return id
 }
 
-fun <T : View> View.find(id: String): T = findViewById<T>(id.toLayoutId())
+fun <T : View> View.find(id: String): T? = findViewById(id.toLayoutId())
 
-fun <T : View> AppCompatActivity.find(id: String): T = findViewById<T>(id.toLayoutId())
+fun <T : View> AppCompatActivity.find(id: String): T? = findViewById(id.toLayoutId())
 
 
 fun RecyclerView.setOnItemClickListener(listener: (View, Int) -> Unit) {

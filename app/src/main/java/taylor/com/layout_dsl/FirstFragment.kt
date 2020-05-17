@@ -1,13 +1,18 @@
 package taylor.com.layout_dsl
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import taylor.com.dsl.*
+import taylor.com.views.ColorBean
+import test.taylor.com.taylorcode.kotlin.override_property.MyAdapter
+import test.taylor.com.taylorcode.kotlin.override_property.MyBean
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -15,6 +20,8 @@ import taylor.com.dsl.*
 class FirstFragment : Fragment() {
 
     private val titleLiveData = MutableLiveData<CharSequence>()
+
+    private lateinit var rv: RecyclerView
 
     private val rootView by lazy {
         ConstraintLayout {
@@ -184,6 +191,14 @@ class FirstFragment : Fragment() {
                 start_toEndOf = "tvCancel"
             }
 
+            rv = RecyclerView {
+                layout_id = "rvTest"
+                layout_width = match_parent
+                layout_height = wrap_content
+                top_toBottomOf = "tvTime"
+                onItemClick = onListItemClick
+                margin_top = 10
+            }
         }
     }
 
@@ -192,12 +207,22 @@ class FirstFragment : Fragment() {
         Unit
     }
 
+    private val onListItemClick = { v: View, i: Int ->
+        Toast.makeText(context, "item $i is clicked", Toast.LENGTH_SHORT).show()
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return rootView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        rv.layoutManager = LinearLayoutManager(context)
+        rv.adapter = MyAdapter(listOf(MyBean("a"), MyBean("b"), MyBean("c"), MyBean("d")))
     }
 
     private fun onBackClick() {
