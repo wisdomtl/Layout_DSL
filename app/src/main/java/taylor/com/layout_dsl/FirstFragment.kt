@@ -1,5 +1,6 @@
 package taylor.com.layout_dsl
 
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Spannable
@@ -8,25 +9,35 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.animation.GlideAnimation
+import com.bumptech.glide.request.target.SimpleTarget
 import taylor.com.bean.User
 import taylor.com.dsl.*
 import test.taylor.com.taylorcode.kotlin.override_property.MyAdapter
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
 class FirstFragment : Fragment() {
 
+    private val diamondUrl = "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2571315283,182922750&fm=26&gp=0.jpg"
+    private val coinUrl =
+        "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589731033455&di=4266c84e59efb61a7f82c71b305954db&imgtype=0&src=http%3A%2F%2Fpic.90sjimg.com%2Fdesign%2F00%2F23%2F31%2F57%2F591be2a6807c3.png"
+
     private val nameLiveData = MutableLiveData<CharSequence>()
-    private val userLiveData = MutableLiveData<User>()
     private val nameColorLiveData = MutableLiveData<String>()
+    private val avatarLiveData = MutableLiveData<Bitmap>()
 
     private lateinit var rv: RecyclerView
+
+    private val target = object : SimpleTarget<Bitmap>() {
+        override fun onResourceReady(resource: Bitmap?, glideAnimation: GlideAnimation<in Bitmap>?) {
+            avatarLiveData.value = resource
+        }
+    }
 
     private val rootView by lazy {
         ConstraintLayout {
@@ -90,6 +101,7 @@ class FirstFragment : Fragment() {
                 layout_width = 40
                 layout_height = 40
                 margin_start = 20
+                bindSrc = avatarLiveData
                 margin_top = 40
                 src = R.drawable.diamond_tag
                 start_toStartOf = "ivBack"
@@ -214,11 +226,13 @@ class FirstFragment : Fragment() {
     private val onListItemClick = { v: View, i: Int ->
         adapter.myBean?.get(i)?.let {
             nameLiveData.value = SpannableStringBuilder(it.name).apply {
-                setSpan(ForegroundColorSpan(Color.RED),0,it.name.indexOf(" "), Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-                val color = if (it.gender ==1) "#b300ff00" else "#b3ff00ff"
-                setSpan(ForegroundColorSpan(Color.parseColor(color)),it.name.indexOf(" "),it.name.lastIndex+1,Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+                setSpan(ForegroundColorSpan(Color.RED), 0, it.name.indexOf(" "), Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                val color = if (it.gender == 1) "#b300ff00" else "#b3ff00ff"
+                setSpan(ForegroundColorSpan(Color.parseColor(color)), it.name.indexOf(" "), it.name.lastIndex + 1, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
             }
-//            nameColorLiveData.value = if (it.gender ==1) "#b300ff00" else "#b3ff00ff"
+
+            if (it.gender == 1) Glide.with(context).load(diamondUrl).asBitmap().into(target)
+            else Glide.with(context).load(coinUrl).asBitmap().into(target)
         }
         Unit
     }
@@ -236,7 +250,6 @@ class FirstFragment : Fragment() {
     )
 
     private var adapter = MyAdapter(users)
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -2,6 +2,7 @@ package taylor.com.dsl
 
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Typeface
 import android.util.TypedValue
@@ -126,7 +127,7 @@ inline var View.padding_top: Int
         return 0
     }
     set(value) {
-        setPadding(paddingLeft, value.dp(), paddingRight, paddingBottom)
+        setPadding(paddingLeft, value.dp, paddingRight, paddingBottom)
     }
 
 inline var View.padding_bottom: Int
@@ -134,7 +135,7 @@ inline var View.padding_bottom: Int
         return 0
     }
     set(value) {
-        setPadding(paddingLeft, paddingTop, paddingRight, value.dp())
+        setPadding(paddingLeft, paddingTop, paddingRight, value.dp)
     }
 
 inline var View.padding_start: Int
@@ -142,7 +143,7 @@ inline var View.padding_start: Int
         return 0
     }
     set(value) {
-        setPadding(value.dp(), paddingTop, paddingRight, paddingBottom)
+        setPadding(value.dp, paddingTop, paddingRight, paddingBottom)
     }
 
 inline var View.padding_end: Int
@@ -150,21 +151,21 @@ inline var View.padding_end: Int
         return 0
     }
     set(value) {
-        setPadding(paddingLeft, paddingTop, value.dp(), paddingBottom)
+        setPadding(paddingLeft, paddingTop, value.dp, paddingBottom)
     }
 inline var View.padding: Int
     get() {
         return 0
     }
     set(value) {
-        setPadding(value.dp(), value.dp(), value.dp(), value.dp())
+        setPadding(value.dp, value.dp, value.dp, value.dp)
     }
 inline var View.layout_width: Int
     get() {
         return 0
     }
     set(value) {
-        val w = if (value > 0) value.dp() else value
+        val w = if (value > 0) value.dp else value
         val h = layoutParams?.height ?: 0
         layoutParams = ViewGroup.MarginLayoutParams(w, h)
     }
@@ -176,7 +177,7 @@ inline var View.layout_height: Int
     set(value) {
 
         val w = layoutParams?.width ?: 0
-        val h = if (value > 0) value.dp() else value
+        val h = if (value > 0) value.dp else value
         layoutParams = ViewGroup.MarginLayoutParams(w, h)
     }
 
@@ -425,7 +426,7 @@ inline var View.margin_top: Int
     }
     set(value) {
         (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
-            topMargin = value.dp()
+            topMargin = value.dp
         }
     }
 
@@ -435,7 +436,7 @@ inline var View.margin_bottom: Int
     }
     set(value) {
         (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
-            bottomMargin = value.dp()
+            bottomMargin = value.dp
         }
     }
 
@@ -445,7 +446,7 @@ inline var View.margin_start: Int
     }
     set(value) {
         (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
-            MarginLayoutParamsCompat.setMarginStart(this, value.dp())
+            MarginLayoutParamsCompat.setMarginStart(this, value.dp)
         }
     }
 
@@ -455,7 +456,7 @@ inline var View.margin_end: Int
     }
     set(value) {
         (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
-            MarginLayoutParamsCompat.setMarginEnd(this, value.dp())
+            MarginLayoutParamsCompat.setMarginEnd(this, value.dp)
         }
     }
 
@@ -475,6 +476,14 @@ inline var ImageView.src: Int
         setImageResource(value)
     }
 
+inline var ImageView.bindSrc: LiveData<Bitmap>?
+    get() {
+        return null
+    }
+    set(value) {
+        observe(value) { setImageBitmap(it) }
+    }
+
 inline var TextView.bindText: LiveData<CharSequence>?
     get() {
         return null
@@ -487,7 +496,7 @@ inline var TextView.bindTextColor: LiveData<String>?
         return null
     }
     set(value) {
-        observe(value){
+        observe(value) {
             textColor = it
         }
     }
@@ -535,7 +544,7 @@ inline var Flow.flow_horizontalGap: Int
         return 0
     }
     set(value) {
-        setHorizontalGap(value.dp())
+        setHorizontalGap(value.dp)
     }
 
 inline var Flow.flow_verticalGap: Int
@@ -543,7 +552,7 @@ inline var Flow.flow_verticalGap: Int
         return 0
     }
     set(value) {
-        setVerticalGap(value.dp())
+        setVerticalGap(value.dp)
     }
 
 inline var Flow.flow_wrapMode: Int
@@ -621,12 +630,14 @@ val parent_id = "0"
 //</editor-fold>
 
 //<editor-fold desc="layout helper function">
-fun Int.dp(): Int =
-    TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP,
-        this.toFloat(),
-        Resources.getSystem().displayMetrics
-    ).toInt()
+val Int.dp: Int
+    get() {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            this.toFloat(),
+            Resources.getSystem().displayMetrics
+        ).toInt()
+    }
 
 fun ViewGroup.MarginLayoutParams.toConstraintLayoutParam() =
     ConstraintLayout.LayoutParams(width, height).also { it ->

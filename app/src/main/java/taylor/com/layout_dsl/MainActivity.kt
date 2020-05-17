@@ -5,6 +5,7 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -18,5 +19,7 @@ class MainActivity : AppCompatActivity() {
             add(R.id.container, FirstFragment(), "first")
             commit()
         }
+
+        findViewById<TextView>(R.id.tvName).setText("taylor")
     }
 }
