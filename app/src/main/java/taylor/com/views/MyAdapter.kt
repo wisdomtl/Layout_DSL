@@ -2,14 +2,14 @@ package test.taylor.com.taylorcode.kotlin.override_property
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import taylor.com.bean.User
 import taylor.com.dsl.*
 
-class MyAdapter(private val myBean: List<MyBean>?) : RecyclerView.Adapter<MyViewHolder>() {
+class MyAdapter(var myBean: List<User>?) : RecyclerView.Adapter<MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = parent.context.run {
             ConstraintLayout {
-                background_color = "#b300ff00"
                 layout_height = 60
                 layout_width = match_parent
                 margin_end = 20

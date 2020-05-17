@@ -1,6 +1,10 @@
 package taylor.com.layout_dsl
 
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,17 +13,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import taylor.com.bean.User
 import taylor.com.dsl.*
-import taylor.com.views.ColorBean
 import test.taylor.com.taylorcode.kotlin.override_property.MyAdapter
-import test.taylor.com.taylorcode.kotlin.override_property.MyBean
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class FirstFragment : Fragment() {
 
-    private val titleLiveData = MutableLiveData<CharSequence>()
+    private val nameLiveData = MutableLiveData<CharSequence>()
+    private val userLiveData = MutableLiveData<User>()
+    private val nameColorLiveData = MutableLiveData<String>()
 
     private lateinit var rv: RecyclerView
 
@@ -37,14 +42,13 @@ class FirstFragment : Fragment() {
                 src = R.drawable.ic_back_black
                 start_toStartOf = parent_id
                 top_toTopOf = parent_id
-                onClick = { onBackClick() }
+                onClick = onBackClick
             }
 
             TextView {
                 layout_width = wrap_content
                 layout_height = wrap_content
                 text = "commit"
-                bindText = titleLiveData
                 textSize = 30f
                 textStyle = bold
                 align_vertical_to = "ivBack"
@@ -73,7 +77,7 @@ class FirstFragment : Fragment() {
                 layout_id = "layer"
                 layout_width = wrap_content
                 layout_height = wrap_content
-                referenceIds = "ivDiamond,tvTitle,tvContent,ivAvatar,tvTime,tvSub"
+                referenceIds = "ivDiamond,tvName,tvContent,ivAvatar,tvTime,tvSub"
                 background_res = R.drawable.tag_checked_shape
                 start_toStartOf = "ivDiamond"
                 top_toTopOf = "ivDiamond"
@@ -93,14 +97,14 @@ class FirstFragment : Fragment() {
             }
 
             TextView {
-                layout_id = "tvTitle"
+                layout_id = "tvName"
                 layout_width = wrap_content
                 layout_height = wrap_content
                 margin_start = 5
                 gravity = gravity_center
-                text = "gole"
                 padding = 10
-                textColor = "#389793"
+                bindText = nameLiveData
+                bindTextColor = nameColorLiveData
                 textSize = 20f
                 textStyle = bold
                 align_vertical_to = "ivDiamond"
@@ -203,13 +207,35 @@ class FirstFragment : Fragment() {
     }
 
     private val onCancelClick = { v: View ->
-        titleLiveData.value = "new title"
+        nameLiveData.value = "new title"
         Unit
     }
 
     private val onListItemClick = { v: View, i: Int ->
-        Toast.makeText(context, "item $i is clicked", Toast.LENGTH_SHORT).show()
+        adapter.myBean?.get(i)?.let {
+            nameLiveData.value = SpannableStringBuilder(it.name).apply {
+                setSpan(ForegroundColorSpan(Color.RED),0,it.name.indexOf(" "), Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                val color = if (it.gender ==1) "#b300ff00" else "#b3ff00ff"
+                setSpan(ForegroundColorSpan(Color.parseColor(color)),it.name.indexOf(" "),it.name.lastIndex+1,Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+            }
+//            nameColorLiveData.value = if (it.gender ==1) "#b300ff00" else "#b3ff00ff"
+        }
+        Unit
     }
+
+    private val onBackClick = { v: View ->
+        activity?.finish()
+        Unit
+    }
+
+    private val users = listOf(
+        User("Taylor Swift", 10),
+        User("Linda candy", 20, 1),
+        User("Cindy json", 30, 1),
+        User("Evian Mary", 40, 1)
+    )
+
+    private var adapter = MyAdapter(users)
 
 
     override fun onCreateView(
@@ -222,10 +248,6 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         rv.layoutManager = LinearLayoutManager(context)
-        rv.adapter = MyAdapter(listOf(MyBean("a"), MyBean("b"), MyBean("c"), MyBean("d")))
-    }
-
-    private fun onBackClick() {
-        activity?.finish()
+        rv.adapter = adapter
     }
 }

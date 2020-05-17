@@ -459,6 +459,14 @@ inline var View.margin_end: Int
         }
     }
 
+inline var View.bindVisibility: LiveData<Int>?
+    get() {
+        return null
+    }
+    set(value) {
+        observe(value) { visibility = it }
+    }
+
 inline var ImageView.src: Int
     get() {
         return -1
@@ -472,8 +480,15 @@ inline var TextView.bindText: LiveData<CharSequence>?
         return null
     }
     set(value) {
-        (context as? LifecycleOwner)?.let { owner ->
-            value?.observe(owner, Observer { text = it })
+        observe(value) { text = it }
+    }
+inline var TextView.bindTextColor: LiveData<String>?
+    get() {
+        return null
+    }
+    set(value) {
+        observe(value){
+            textColor = it
         }
     }
 
@@ -635,6 +650,11 @@ fun <T : View> View.find(id: String): T? = findViewById(id.toLayoutId())
 
 fun <T : View> AppCompatActivity.find(id: String): T? = findViewById(id.toLayoutId())
 
+fun <T> View.observe(liveData: LiveData<T>?, action: (T) -> Unit) {
+    (context as? LifecycleOwner)?.let { owner ->
+        liveData?.observe(owner, Observer { action(it) })
+    }
+}
 
 fun RecyclerView.setOnItemClickListener(listener: (View, Int) -> Unit) {
     addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
