@@ -1,21 +1,20 @@
 package taylor.com.layout_dsl
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import taylor.com.dsl.*
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class FirstFragment : Fragment() {
+
+    private val titleLiveData = MutableLiveData<CharSequence>()
 
     private val rootView by lazy {
         ConstraintLayout {
@@ -38,6 +37,7 @@ class FirstFragment : Fragment() {
                 layout_width = wrap_content
                 layout_height = wrap_content
                 text = "commit"
+                bindText = titleLiveData
                 textSize = 30f
                 textStyle = bold
                 align_vertical_to = "ivBack"
@@ -162,6 +162,7 @@ class FirstFragment : Fragment() {
                 end_toStartOf = "tvOk"
                 start_toStartOf = parent_id
                 horizontal_chain_style = packed
+                onClick = onCancelClick
             }
 
             TextView {
@@ -185,6 +186,12 @@ class FirstFragment : Fragment() {
 
         }
     }
+
+    private val onCancelClick = { v: View ->
+        titleLiveData.value = "new title"
+        Unit
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

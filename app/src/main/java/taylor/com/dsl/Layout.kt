@@ -18,6 +18,9 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MarginLayoutParamsCompat
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 
 //<editor-fold desc="widget creation function">
@@ -458,6 +461,16 @@ inline var ImageView.src: Int
         setImageResource(value)
     }
 
+inline var TextView.bindText: LiveData<CharSequence>?
+    get() {
+        return null
+    }
+    set(value) {
+        (context as? LifecycleOwner)?.let { owner ->
+            value?.observe(owner, Observer { text = it })
+        }
+    }
+
 inline var TextView.textStyle: Int
     get() {
         return -1
@@ -472,7 +485,7 @@ inline var TextView.textColor: String
         setTextColor(Color.parseColor(value))
     }
 
-inline var TextView.gravity:Int
+inline var TextView.gravity: Int
     get() {
         return 0
     }
@@ -480,12 +493,12 @@ inline var TextView.gravity:Int
         gravity = value
     }
 
-inline var TextView.fontFamily:Int
+inline var TextView.fontFamily: Int
     get() {
         return 0
     }
     set(value) {
-        typeface = ResourcesCompat.getFont(context,value)
+        typeface = ResourcesCompat.getFont(context, value)
     }
 
 inline var NestedScrollView.fadeScrollBar: Boolean
@@ -504,7 +517,7 @@ inline var ConstraintHelper.referenceIds: String
         referencedIds = value.split(",").map { it.toLayoutId() }.toIntArray()
     }
 
-inline var Flow.flow_horizontalGap:Int
+inline var Flow.flow_horizontalGap: Int
     get() {
         return 0
     }
@@ -512,7 +525,7 @@ inline var Flow.flow_horizontalGap:Int
         setHorizontalGap(value.dp())
     }
 
-inline var Flow.flow_verticalGap:Int
+inline var Flow.flow_verticalGap: Int
     get() {
         return 0
     }
@@ -520,7 +533,7 @@ inline var Flow.flow_verticalGap:Int
         setVerticalGap(value.dp())
     }
 
-inline var Flow.flow_wrapMode:Int
+inline var Flow.flow_wrapMode: Int
     get() {
         return 0
     }
@@ -543,7 +556,6 @@ var RecyclerView.onItemClick: (View, Int) -> Unit
     set(value) {
         setOnItemClickListener(value)
     }
-
 //</editor-fold>
 
 
