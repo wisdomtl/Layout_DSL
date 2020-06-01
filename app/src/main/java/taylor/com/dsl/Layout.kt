@@ -366,6 +366,25 @@ inline var View.vertical_chain_style: Int
         }
     }
 
+inline var View.horizontal_bias:Float
+    get() {
+        return -1f
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            horizontalBias = value
+        }
+    }
+inline var View.vertital_bias:Float
+    get() {
+        return -1f
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            verticalBias = value
+        }
+    }
+
 inline var View.center_horizontal: Boolean
     get() {
         return false
@@ -467,6 +486,7 @@ inline var View.bindVisibility: LiveData<Int>?
     set(value) {
         observe(value) { visibility = it }
     }
+
 
 inline var ImageView.src: Int
     get() {
