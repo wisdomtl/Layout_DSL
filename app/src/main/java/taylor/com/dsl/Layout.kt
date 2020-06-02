@@ -366,7 +366,7 @@ inline var View.vertical_chain_style: Int
         }
     }
 
-inline var View.horizontal_bias:Float
+inline var View.horizontal_bias: Float
     get() {
         return -1f
     }
@@ -375,7 +375,7 @@ inline var View.horizontal_bias:Float
             horizontalBias = value
         }
     }
-inline var View.vertical_bias:Float
+inline var View.vertical_bias: Float
     get() {
         return -1f
     }
@@ -479,6 +479,14 @@ inline var View.margin_end: Int
         }
     }
 
+inline var View.layout_visibility:Int
+    get() {
+        return -1
+    }
+    set(value) {
+        visibility  = value
+    }
+
 inline var View.bindVisibility: LiveData<Int>?
     get() {
         return null
@@ -487,6 +495,25 @@ inline var View.bindVisibility: LiveData<Int>?
         observe(value) { visibility = it }
     }
 
+inline var View.bindBackgroundColor: LiveData<String>?
+    get() {
+        return null
+    }
+    set(value) {
+        observe(value) {
+            background_color = it
+        }
+    }
+
+inline var View.bindBackgroundRes: LiveData<Int>?
+    get() {
+        return null
+    }
+    set(value) {
+        observe(value) {
+            background_res = it
+        }
+    }
 
 inline var ImageView.src: Int
     get() {
@@ -504,6 +531,14 @@ inline var ImageView.bindSrc: LiveData<Bitmap>?
         observe(value) { setImageBitmap(it) }
     }
 
+inline var ImageView.bindSrcRes: LiveData<Int>?
+    get() {
+        return null
+    }
+    set(value) {
+        observe(value) { setImageResource(it) }
+    }
+
 inline var TextView.bindText: LiveData<CharSequence>?
     get() {
         return null
@@ -519,6 +554,14 @@ inline var TextView.bindTextColor: LiveData<String>?
         observe(value) {
             textColor = it
         }
+    }
+
+inline var TextView.textRes: Int
+    get() {
+        return -1
+    }
+    set(value) {
+       setText(value)
     }
 
 inline var TextView.textStyle: Int
@@ -614,6 +657,9 @@ var RecyclerView.onItemClick: (View, Int) -> Unit
 val match_parent = ViewGroup.LayoutParams.MATCH_PARENT
 val wrap_content = ViewGroup.LayoutParams.WRAP_CONTENT
 
+val visible = View.VISIBLE
+val gone  = View.GONE
+val invisible = View.INVISIBLE
 
 val horizontal = LinearLayout.HORIZONTAL
 val vertical = LinearLayout.VERTICAL

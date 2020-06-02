@@ -61,6 +61,7 @@ class FirstFragment : Fragment() {
                 layout_height = wrap_content
                 text = "commit"
                 textSize = 30f
+                layout_visibility = gone
                 textStyle = bold
                 align_vertical_to = "ivBack"
                 center_horizontal = true
