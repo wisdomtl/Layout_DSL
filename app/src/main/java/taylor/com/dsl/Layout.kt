@@ -375,7 +375,7 @@ inline var View.horizontal_bias:Float
             horizontalBias = value
         }
     }
-inline var View.vertital_bias:Float
+inline var View.vertical_bias:Float
     get() {
         return -1f
     }
