@@ -537,11 +537,20 @@ inline var TextView.textColor: String
 
 inline var TextView.fontFamily: Int
     get() {
-        return 0
+        return 1
     }
     set(value) {
         typeface = ResourcesCompat.getFont(context, value)
     }
+
+inline var Button.textAllCaps:Boolean
+    get() {
+        return false
+    }
+    set(value) {
+        isAllCaps = value
+    }
+
 
 inline var NestedScrollView.fadeScrollBar: Boolean
     get() {
