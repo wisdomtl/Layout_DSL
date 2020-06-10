@@ -56,6 +56,9 @@ inline fun ViewGroup.ConstraintLayout(init: ConstraintLayout.() -> Unit) =
 inline fun ViewGroup.FrameLayout(init: FrameLayout.() -> Unit) =
     FrameLayout(context).apply(init).also { addView(it) }
 
+inline fun ViewGroup.ViewFlipper(init: ViewFlipper.() -> Unit) =
+    ViewFlipper(context).apply(init).also { addView(it) }
+
 inline fun ConstraintLayout.Guideline(init: Guideline.() -> Unit) =
     Guideline(context).apply(init).also { addView(it) }
 
@@ -89,11 +92,14 @@ inline fun Context.ImageView(init: ImageView.() -> Unit) =
 inline fun Context.View(init: View.() -> Unit) =
     View(this).apply(init)
 
+inline fun Context.ViewFlipper(init: ViewFlipper.() -> Unit) =
+    ViewFlipper(this).apply(init)
+
 inline fun Fragment.ConstraintLayout(init: ConstraintLayout.() -> Unit) =
-    ConstraintLayout(context).apply(init)
+    context?.let { ConstraintLayout(it).apply(init) }
 
 inline fun Fragment.LinearLayout(init: LinearLayout.() -> Unit) =
-    LinearLayout(context).apply(init)
+    context?.let { LinearLayout(it).apply(init) }
 
 inline fun Fragment.FrameLayout(init: FrameLayout.() -> Unit) =
     context?.let { FrameLayout(it).apply(init) }
@@ -102,16 +108,19 @@ inline fun Fragment.NestedScrollView(init: NestedScrollView.() -> Unit) =
     context?.let { NestedScrollView(it).apply(init) }
 
 inline fun Fragment.TextView(init: TextView.() -> Unit) =
-    TextView(context).apply(init)
+    context?.let { TextView(it).apply(init) }
 
 inline fun Fragment.Button(init: Button.() -> Unit) =
-    Button(context).apply(init)
+    context?.let { Button(it).apply(init) }
 
 inline fun Fragment.ImageView(init: ImageView.() -> Unit) =
-    ImageView(context).apply(init)
+    context?.let { ImageView(it).apply(init) }
 
 inline fun Fragment.View(init: View.() -> Unit) =
     context?.let { View(it).apply(init) }
+
+inline fun Fragment.ViewFlipper(init: ViewFlipper.() -> Unit) =
+    context?.let { ViewFlipper(it).apply(init) }
 //</editor-fold>
 
 //<editor-fold desc="View extend field">
@@ -479,12 +488,12 @@ inline var View.margin_end: Int
         }
     }
 
-inline var View.layout_visibility:Int
+inline var View.layout_visibility: Int
     get() {
         return -1
     }
     set(value) {
-        visibility  = value
+        visibility = value
     }
 
 inline var View.bindVisibility: LiveData<Int>?
@@ -561,7 +570,7 @@ inline var TextView.textRes: Int
         return -1
     }
     set(value) {
-       setText(value)
+        setText(value)
     }
 
 inline var TextView.textStyle: Int
@@ -658,7 +667,7 @@ val match_parent = ViewGroup.LayoutParams.MATCH_PARENT
 val wrap_content = ViewGroup.LayoutParams.WRAP_CONTENT
 
 val visible = View.VISIBLE
-val gone  = View.GONE
+val gone = View.GONE
 val invisible = View.INVISIBLE
 
 val horizontal = LinearLayout.HORIZONTAL
