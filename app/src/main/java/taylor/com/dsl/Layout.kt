@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Typeface
+import android.text.Editable
 import android.util.TypedValue
 import android.view.*
 import android.widget.*
@@ -59,6 +60,9 @@ inline fun ViewGroup.FrameLayout(init: FrameLayout.() -> Unit) =
 inline fun ViewGroup.ViewFlipper(init: ViewFlipper.() -> Unit) =
     ViewFlipper(context).apply(init).also { addView(it) }
 
+inline fun ViewGroup.EditText(init: EditText.() -> Unit) =
+    EditText(context).apply(init).also { addView(it) }
+
 inline fun ConstraintLayout.Guideline(init: Guideline.() -> Unit) =
     Guideline(context).apply(init).also { addView(it) }
 
@@ -92,6 +96,9 @@ inline fun Context.ImageView(init: ImageView.() -> Unit) =
 inline fun Context.View(init: View.() -> Unit) =
     View(this).apply(init)
 
+inline fun Context.EditText(init: EditText.() -> Unit) =
+    EditText(this).apply(init)
+
 inline fun Context.ViewFlipper(init: ViewFlipper.() -> Unit) =
     ViewFlipper(this).apply(init)
 
@@ -121,6 +128,9 @@ inline fun Fragment.View(init: View.() -> Unit) =
 
 inline fun Fragment.ViewFlipper(init: ViewFlipper.() -> Unit) =
     context?.let { ViewFlipper(it).apply(init) }
+
+inline fun Fragment.EditText(init: EditText.() -> Unit) =
+    context?.let { EditText(it).apply(init) }
 //</editor-fold>
 
 //<editor-fold desc="View extend field">
@@ -251,20 +261,22 @@ inline var View.weight: Float
         return 0f
     }
     set(value) {
-        layoutParams = LinearLayout.LayoutParams(layoutParams.width, layoutParams.height).also { it ->
-            it.gravity = (layoutParams as? LinearLayout.LayoutParams)?.gravity ?: -1
-            it.weight = value
-        }
+        layoutParams =
+            LinearLayout.LayoutParams(layoutParams.width, layoutParams.height).also { it ->
+                it.gravity = (layoutParams as? LinearLayout.LayoutParams)?.gravity ?: -1
+                it.weight = value
+            }
     }
 inline var View.layout_gravity: Int
     get() {
         return -1
     }
     set(value) {
-        layoutParams = LinearLayout.LayoutParams(layoutParams.width, layoutParams.height).also { it ->
-            it.weight = (layoutParams as? LinearLayout.LayoutParams)?.weight ?: 0f
-            it.gravity = value
-        }
+        layoutParams =
+            LinearLayout.LayoutParams(layoutParams.width, layoutParams.height).also { it ->
+                it.weight = (layoutParams as? LinearLayout.LayoutParams)?.weight ?: 0f
+                it.gravity = value
+            }
     }
 
 inline var View.start_toStartOf: String
@@ -595,7 +607,33 @@ inline var TextView.fontFamily: Int
         typeface = ResourcesCompat.getFont(context, value)
     }
 
-inline var Button.textAllCaps:Boolean
+inline var TextView.onTextChange: TextWatcher
+    get() {
+        return TextWatcher()
+    }
+    set(value) {
+        val textWatcher = object : android.text.TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                value.afterTextChanged.invoke(s)
+            }
+
+            override fun beforeTextChanged(
+                text: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+                value.beforeTextChanged.invoke(text, start, count, after)
+            }
+
+            override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
+                value.onTextChanged.invoke(text, start, before, count)
+            }
+        }
+        addTextChangedListener(textWatcher)
+    }
+
+inline var Button.textAllCaps: Boolean
     get() {
         return false
     }
@@ -732,7 +770,8 @@ fun ViewGroup.MarginLayoutParams.toConstraintLayoutParam() =
     }
 
 fun ViewGroup.LayoutParams.append(set: ConstraintLayout.LayoutParams.() -> Unit) =
-    (this as? ConstraintLayout.LayoutParams)?.apply(set) ?: (this as? ViewGroup.MarginLayoutParams)?.toConstraintLayoutParam()?.apply(set)
+    (this as? ConstraintLayout.LayoutParams)?.apply(set)
+        ?: (this as? ViewGroup.MarginLayoutParams)?.toConstraintLayoutParam()?.apply(set)
 
 
 fun String.toLayoutId(): Int {
@@ -770,11 +809,21 @@ fun RecyclerView.setOnItemClickListener(listener: (View, Int) -> Unit) {
                 return false
             }
 
-            override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+            override fun onFling(
+                e1: MotionEvent?,
+                e2: MotionEvent?,
+                velocityX: Float,
+                velocityY: Float
+            ): Boolean {
                 return false
             }
 
-            override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+            override fun onScroll(
+                e1: MotionEvent?,
+                e2: MotionEvent?,
+                distanceX: Float,
+                distanceY: Float
+            ): Boolean {
                 return false
             }
 
@@ -795,4 +844,26 @@ fun RecyclerView.setOnItemClickListener(listener: (View, Int) -> Unit) {
         }
     })
 }
+//</editor-fold>
+
+
+//<editor-fold desc="listener helper class">
+class TextWatcher(
+    var beforeTextChanged: (
+        text: CharSequence?,
+        start: Int,
+        count: Int,
+        after: Int
+    ) -> Unit = { _, _, _, _ -> },
+    var onTextChanged: (
+        text: CharSequence?,
+        start: Int,
+        count: Int,
+        after: Int
+    ) -> Unit = { _, _, _, _ -> },
+    var afterTextChanged: (text: Editable?) -> Unit = {}
+)
+
+fun textWatcher(init: TextWatcher.() -> Unit): TextWatcher = TextWatcher().apply(init)
+
 //</editor-fold>

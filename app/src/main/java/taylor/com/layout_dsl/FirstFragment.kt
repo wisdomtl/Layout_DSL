@@ -6,10 +6,10 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +23,8 @@ import test.taylor.com.taylorcode.kotlin.override_property.MyAdapter
 
 class FirstFragment : Fragment() {
 
-    private val diamondUrl = "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2571315283,182922750&fm=26&gp=0.jpg"
+    private val diamondUrl =
+        "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2571315283,182922750&fm=26&gp=0.jpg"
     private val coinUrl =
         "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589731033455&di=4266c84e59efb61a7f82c71b305954db&imgtype=0&src=http%3A%2F%2Fpic.90sjimg.com%2Fdesign%2F00%2F23%2F31%2F57%2F591be2a6807c3.png"
 
@@ -34,7 +35,10 @@ class FirstFragment : Fragment() {
     private lateinit var rv: RecyclerView
 
     private val target = object : SimpleTarget<Bitmap>() {
-        override fun onResourceReady(resource: Bitmap?, glideAnimation: GlideAnimation<in Bitmap>?) {
+        override fun onResourceReady(
+            resource: Bitmap?,
+            glideAnimation: GlideAnimation<in Bitmap>?
+        ) {
             avatarLiveData.value = resource
         }
     }
@@ -216,6 +220,19 @@ class FirstFragment : Fragment() {
                 onItemClick = onListItemClick
                 margin_top = 10
             }
+
+            EditText {
+                layout_width = match_parent
+                layout_height = 50
+                textSize = 20f
+                background_color = "#00ffff"
+                top_toBottomOf = "rvTest"
+                onTextChange = textWatcher {
+                    onTextChanged = { text: CharSequence?, start: Int, count: Int, after: Int ->
+                        Log.v("ttaylor","tag=text change, FirstFragment.()  text=${text}")
+                    }
+                }
+            }
         }
     }
 
@@ -227,9 +244,19 @@ class FirstFragment : Fragment() {
     private val onListItemClick = { v: View, i: Int ->
         adapter.myBean?.get(i)?.let {
             nameLiveData.value = SpannableStringBuilder(it.name).apply {
-                setSpan(ForegroundColorSpan(Color.RED), 0, it.name.indexOf(" "), Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                setSpan(
+                    ForegroundColorSpan(Color.RED),
+                    0,
+                    it.name.indexOf(" "),
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                )
                 val color = if (it.gender == 1) "#b300ff00" else "#b3ff00ff"
-                setSpan(ForegroundColorSpan(Color.parseColor(color)), it.name.indexOf(" "), it.name.lastIndex + 1, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+                setSpan(
+                    ForegroundColorSpan(Color.parseColor(color)),
+                    it.name.indexOf(" "),
+                    it.name.lastIndex + 1,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                )
             }
 
             if (it.gender == 1) Glide.with(context).load(diamondUrl).asBitmap().into(target)
