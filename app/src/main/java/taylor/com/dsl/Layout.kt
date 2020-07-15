@@ -24,6 +24,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import taylor.com.views.LineFeedLayout
 
 //<editor-fold desc="widget creation function">
 inline fun ViewGroup.TextView(init: TextView.() -> Unit) =
@@ -62,6 +63,9 @@ inline fun ViewGroup.ViewFlipper(init: ViewFlipper.() -> Unit) =
 
 inline fun ViewGroup.EditText(init: EditText.() -> Unit) =
     EditText(context).apply(init).also { addView(it) }
+
+inline fun ViewGroup.LineFeedLayout(init: LineFeedLayout.() -> Unit) =
+    LineFeedLayout(context).apply(init).also { addView(it) }
 
 inline fun ConstraintLayout.Guideline(init: Guideline.() -> Unit) =
     Guideline(context).apply(init).also { addView(it) }
@@ -102,6 +106,9 @@ inline fun Context.EditText(init: EditText.() -> Unit) =
 inline fun Context.ViewFlipper(init: ViewFlipper.() -> Unit) =
     ViewFlipper(this).apply(init)
 
+inline fun Context.LineFeedLayout(init: LineFeedLayout.() -> Unit) =
+    LineFeedLayout(this).apply(init)
+
 inline fun Fragment.ConstraintLayout(init: ConstraintLayout.() -> Unit) =
     context?.let { ConstraintLayout(it).apply(init) }
 
@@ -131,6 +138,9 @@ inline fun Fragment.ViewFlipper(init: ViewFlipper.() -> Unit) =
 
 inline fun Fragment.EditText(init: EditText.() -> Unit) =
     context?.let { EditText(it).apply(init) }
+
+inline fun Fragment.LineFeedLayout(init: LineFeedLayout.() -> Unit) =
+    context?.let { LineFeedLayout(it).apply(init) }
 //</editor-fold>
 
 //<editor-fold desc="View extend field">
