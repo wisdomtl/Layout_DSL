@@ -396,6 +396,16 @@ inline var View.horizontal_bias: Float
             horizontalBias = value
         }
     }
+inline var View.dimension_radio: String
+    get() {
+        return ""
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            dimensionRatio = value
+        }
+    }
+
 inline var View.vertical_bias: Float
     get() {
         return -1f
