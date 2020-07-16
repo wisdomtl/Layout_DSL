@@ -120,12 +120,16 @@ class FirstFragment : Fragment() {
                 margin_start = 5
                 gravity = gravity_center
                 padding = 10
-                bindText = nameLiveData
                 bindTextColor = nameColorLiveData
                 textSize = 20f
                 textStyle = bold
                 align_vertical_to = "ivDiamond"
                 start_toEndOf = "ivDiamond"
+                bind = binder(nameLiveData) {
+                    bind = {
+                        text = it as CharSequence
+                    }
+                }
             }
 
             TextView {
