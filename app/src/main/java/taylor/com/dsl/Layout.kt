@@ -587,14 +587,22 @@ inline var TextView.bindTextColor: LiveData<String>?
         }
     }
 
-inline var View.bind: Binder?
+inline var View.bindLiveData: LiveDataBinder?
     get() {
         return null
     }
     set(value) {
         observe(value?.liveData) {
-            value?.bind?.invoke(it)
+            value?.action?.invoke(it)
         }
+    }
+
+inline var View.bind: Binder?
+    get() {
+        return null
+    }
+    set(value) {
+        value?.action?.invoke(value.data)
     }
 
 inline var TextView.textRes: Int
@@ -889,8 +897,13 @@ fun textWatcher(init: TextWatcher.() -> Unit): TextWatcher = TextWatcher().apply
 /**
  * helper class for data binding
  */
-class Binder(var liveData: LiveData<*>? = null, var bind: ((Any?) -> Unit)? = null)
+class LiveDataBinder(var liveData: LiveData<*>? = null, var action: ((Any?) -> Unit)? = null)
 
-fun binder(liveData: LiveData<*>?,init: Binder.() -> Unit): Binder = Binder(liveData).apply(init)
+fun liveDataBinder(liveData: LiveData<*>?, init: LiveDataBinder.() -> Unit): LiveDataBinder =
+    LiveDataBinder(liveData).apply(init)
+
+class Binder(var data: Any?, var action: ((Any?) -> Unit)? = null)
+
+fun binder(data: Any?, init: Binder.() -> Unit): Binder = Binder(data).apply(init)
 
 //</editor-fold>

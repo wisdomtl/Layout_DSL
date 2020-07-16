@@ -125,11 +125,17 @@ class FirstFragment : Fragment() {
                 textStyle = bold
                 align_vertical_to = "ivDiamond"
                 start_toEndOf = "ivDiamond"
-                bind = binder(nameLiveData) {
-                    bind = {
+                bindLiveData = liveDataBinder(nameLiveData) {
+                    action = {
                         text = it as CharSequence
                     }
                 }
+                bind = binder("init title"){
+                    action = {
+                        text = it.toString()
+                    }
+                }
+
             }
 
             TextView {
