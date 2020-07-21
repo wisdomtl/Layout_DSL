@@ -1,6 +1,7 @@
 package taylor.com.dsl
 
 import android.content.Context
+import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import taylor.com.selector_kt.Selector
@@ -27,3 +28,19 @@ inline fun Context.Selector(init: Selector.() -> Unit): Selector =
 
 inline fun Fragment.Selector(init: Selector.() -> Unit) =
     context?.let { Selector(it).apply(init) }
+
+inline var LineFeedLayout.horizontal_gap: Int
+    get() {
+        return -1
+    }
+    set(value) {
+        horizontalGap = value.dp
+    }
+
+inline var LineFeedLayout.vertical_gap: Int
+    get() {
+        return -1
+    }
+    set(value) {
+        verticalGap = value.dp
+    }

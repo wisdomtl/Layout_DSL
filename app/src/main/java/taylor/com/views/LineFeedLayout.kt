@@ -11,7 +11,14 @@ import android.widget.LinearLayout
  * it spreads the children from left to right until there is not enough horizontal space for them,
  * then the next child will be placed at a new line
  */
-class LineFeedLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ViewGroup(context, attrs, defStyleAttr) {
+class LineFeedLayout @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : ViewGroup(context, attrs, defStyleAttr) {
+
+    var horizontalGap: Int = 0
+    var verticalGap: Int = 0
 
     /**
      * the height of [LineFeedLayout] depends on how much lines it has
@@ -26,15 +33,16 @@ class LineFeedLayout @JvmOverloads constructor(context: Context, attrs: Attribut
         } else {
             var remainWidth = width
             (0 until childCount).map { getChildAt(it) }.forEach { child ->
-                val lp = child.layoutParams as LinearLayout.LayoutParams
-                if (isNewLine(lp, child, remainWidth)) {
+                val lp = child.layoutParams as MarginLayoutParams
+                if (isNewLine(lp, child, remainWidth, horizontalGap)) {
                     remainWidth = width - child.measuredWidth
-                    height += (lp.topMargin + lp.bottomMargin + child.measuredHeight)
+                    height += (lp.topMargin + lp.bottomMargin + child.measuredHeight + verticalGap)
                 } else {
                     remainWidth -= child.measuredWidth
-                    if (height == 0) height = (lp.topMargin + lp.bottomMargin + child.measuredHeight)
+                    if (height == 0) height =
+                        (lp.topMargin + lp.bottomMargin + child.measuredHeight + verticalGap)
                 }
-                remainWidth -= (lp.leftMargin + lp.rightMargin)
+                remainWidth -= (lp.leftMargin + lp.rightMargin + horizontalGap)
             }
         }
 
@@ -47,17 +55,22 @@ class LineFeedLayout @JvmOverloads constructor(context: Context, attrs: Attribut
         var lastBottom = 0
         var count = 0
         (0 until childCount).map { getChildAt(it) }.forEach { child ->
-            val lp = child.layoutParams as LinearLayout.LayoutParams
-            if (isNewLine(lp, child, r - l - left)) {
+            val lp = child.layoutParams as MarginLayoutParams
+            if (isNewLine(lp, child, r - l - left, horizontalGap)) {
                 left = -lp.leftMargin
                 top = lastBottom
                 lastBottom = 0
             }
             val childLeft = left + lp.leftMargin
             val childTop = top + lp.topMargin
-            child.layout(childLeft, childTop, childLeft + child.measuredWidth, childTop + child.measuredHeight)
-            if (lastBottom == 0) lastBottom = child.bottom+lp.bottomMargin
-            left += child.measuredWidth + lp.leftMargin + lp.rightMargin
+            child.layout(
+                childLeft,
+                childTop,
+                childLeft + child.measuredWidth,
+                childTop + child.measuredHeight
+            )
+            if (lastBottom == 0) lastBottom = child.bottom + lp.bottomMargin + verticalGap
+            left += child.measuredWidth + lp.leftMargin + lp.rightMargin + horizontalGap
             count++
         }
     }
@@ -68,7 +81,15 @@ class LineFeedLayout @JvmOverloads constructor(context: Context, attrs: Attribut
      * @param lp LayoutParams of [child]
      * @param child child view of [LineFeedLayout]
      * @param remainWidth the remain space of one line in [LineFeedLayout]
+     * @param horizontalGap the horizontal gap for the children of [LineFeedLayout]
      */
-    private fun isNewLine(lp: LinearLayout.LayoutParams, child: View, remainWidth: Int) = lp.leftMargin + child.measuredWidth + lp.rightMargin > remainWidth
-
+    private fun isNewLine(
+        lp: MarginLayoutParams,
+        child: View,
+        remainWidth: Int,
+        horizontalGap: Int
+    ): Boolean {
+        val childOccupation = lp.leftMargin + child.measuredWidth + lp.rightMargin
+        return (childOccupation + horizontalGap > remainWidth) && (childOccupation > remainWidth)
+    }
 }
