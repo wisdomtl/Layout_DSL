@@ -25,6 +25,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 
+/**
+ * the extension functions and field in this file help you to build layout dynamically,
+ * which has a better performance than xml files and more readable than normal java and kotlin code
+ */
 //<editor-fold desc="widget creation function">
 inline fun ViewGroup.TextView(init: TextView.() -> Unit) =
     TextView(context).apply(init).also { addView(it) }
