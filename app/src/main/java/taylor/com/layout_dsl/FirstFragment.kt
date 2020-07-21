@@ -106,7 +106,6 @@ class FirstFragment : Fragment() {
                 layout_width = 40
                 layout_height = 40
                 margin_start = 20
-                bindSrc = avatarLiveData
                 margin_top = 40
                 src = R.drawable.diamond_tag
                 start_toStartOf = "ivBack"
@@ -120,7 +119,6 @@ class FirstFragment : Fragment() {
                 margin_start = 5
                 gravity = gravity_center
                 padding = 10
-                bindTextColor = nameColorLiveData
                 textSize = 20f
                 textStyle = bold
                 align_vertical_to = "ivDiamond"
@@ -130,10 +128,8 @@ class FirstFragment : Fragment() {
                         text = it as CharSequence
                     }
                 }
-                bind = binder("init title"){
-                    action = {
-                        text = it.toString()
-                    }
+                bind = Binder("init title"){_,data->
+                        text = data.toString()
                 }
 
             }

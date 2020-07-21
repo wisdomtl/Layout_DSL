@@ -518,75 +518,6 @@ inline var View.layout_visibility: Int
         visibility = value
     }
 
-inline var View.bindVisibility: LiveData<Int>?
-    get() {
-        return null
-    }
-    set(value) {
-        observe(value) { visibility = it }
-    }
-
-inline var View.bindBackgroundColor: LiveData<String>?
-    get() {
-        return null
-    }
-    set(value) {
-        observe(value) {
-            background_color = it
-        }
-    }
-
-inline var View.bindBackgroundRes: LiveData<Int>?
-    get() {
-        return null
-    }
-    set(value) {
-        observe(value) {
-            background_res = it
-        }
-    }
-
-inline var ImageView.src: Int
-    get() {
-        return -1
-    }
-    set(value) {
-        setImageResource(value)
-    }
-
-inline var ImageView.bindSrc: LiveData<Bitmap>?
-    get() {
-        return null
-    }
-    set(value) {
-        observe(value) { setImageBitmap(it) }
-    }
-
-inline var ImageView.bindSrcRes: LiveData<Int>?
-    get() {
-        return null
-    }
-    set(value) {
-        observe(value) { setImageResource(it) }
-    }
-
-inline var TextView.bindText: LiveData<CharSequence>?
-    get() {
-        return null
-    }
-    set(value) {
-        observe(value) { text = it }
-    }
-inline var TextView.bindTextColor: LiveData<String>?
-    get() {
-        return null
-    }
-    set(value) {
-        observe(value) {
-            textColor = it
-        }
-    }
-
 inline var View.bindLiveData: LiveDataBinder?
     get() {
         return null
@@ -602,7 +533,15 @@ inline var View.bind: Binder?
         return null
     }
     set(value) {
-        value?.action?.invoke(value.data)
+        value?.action?.invoke(this, value.data )
+    }
+
+inline var ImageView.src: Int
+    get() {
+        return -1
+    }
+    set(value) {
+        setImageResource(value)
     }
 
 inline var TextView.textRes: Int
@@ -902,8 +841,7 @@ class LiveDataBinder(var liveData: LiveData<*>? = null, var action: ((Any?) -> U
 fun liveDataBinder(liveData: LiveData<*>?, init: LiveDataBinder.() -> Unit): LiveDataBinder =
     LiveDataBinder(liveData).apply(init)
 
-class Binder(var data: Any?, var action: ((Any?) -> Unit)? = null)
+class Binder(var data: Any?, var action: ((View, Any?) -> Unit)? = null)
 
-fun binder(data: Any?, init: Binder.() -> Unit): Binder = Binder(data).apply(init)
 
 //</editor-fold>
