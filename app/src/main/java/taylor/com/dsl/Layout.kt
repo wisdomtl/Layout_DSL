@@ -67,6 +67,9 @@ inline fun ViewGroup.ViewFlipper(init: ViewFlipper.() -> Unit) =
 inline fun ViewGroup.EditText(init: EditText.() -> Unit) =
     EditText(context).apply(init).also { addView(it) }
 
+inline fun ViewGroup.HorizontalScrollView(init: HorizontalScrollView.() -> Unit) =
+    HorizontalScrollView(context).apply(init).also { addView(it) }
+
 inline fun ConstraintLayout.Guideline(init: Guideline.() -> Unit) =
     Guideline(context).apply(init).also { addView(it) }
 
@@ -106,6 +109,9 @@ inline fun Context.EditText(init: EditText.() -> Unit) =
 inline fun Context.ViewFlipper(init: ViewFlipper.() -> Unit) =
     ViewFlipper(this).apply(init)
 
+inline fun Context.HorizontalScrollView(init: HorizontalScrollView.() -> Unit) =
+    HorizontalScrollView(this).apply(init)
+
 inline fun Fragment.ConstraintLayout(init: ConstraintLayout.() -> Unit) =
     context?.let { ConstraintLayout(it).apply(init) }
 
@@ -135,6 +141,9 @@ inline fun Fragment.ViewFlipper(init: ViewFlipper.() -> Unit) =
 
 inline fun Fragment.EditText(init: EditText.() -> Unit) =
     context?.let { EditText(it).apply(init) }
+
+inline fun Fragment.HorizontalScrollView(init: HorizontalScrollView.() -> Unit) =
+    context?.let { HorizontalScrollView(it).apply(init) }
 //</editor-fold>
 
 //<editor-fold desc="View extend field">
