@@ -467,6 +467,28 @@ inline var View.align_horizontal_to: String
         end_toEndOf = value
     }
 
+inline var View.width_percentage:Float
+    get() {
+        return -1f
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
+            matchConstraintPercentWidth = value
+        }
+    }
+
+inline var View.height_percentage:Float
+    get() {
+        return -1f
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            height = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
+            matchConstraintPercentHeight = value
+        }
+    }
+
 inline var View.background_color: String
     get() {
         return ""
