@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import taylor.com.selector_kt.Selector
 import taylor.com.views.LineFeedLayout
+import taylor.com.views.ProgressBar
 
 
 /**
@@ -28,6 +29,15 @@ inline fun Context.Selector(init: Selector.() -> Unit): Selector =
 
 inline fun Fragment.Selector(init: Selector.() -> Unit) =
     context?.let { Selector(it).apply(init) }
+
+inline fun ViewGroup.ProgressBar(init: ProgressBar.() -> Unit) =
+    ProgressBar(context).apply(init).also { addView(it) }
+
+inline fun Context.ProgressBar(init: ProgressBar.() -> Unit): ProgressBar =
+    ProgressBar(this).apply(init)
+
+inline fun Fragment.ProgressBar(init: ProgressBar.() -> Unit) =
+    context?.let { ProgressBar(it).apply(init) }
 
 inline var LineFeedLayout.horizontal_gap: Int
     get() {
