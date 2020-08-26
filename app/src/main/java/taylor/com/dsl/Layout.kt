@@ -24,6 +24,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 
 /**
  * the extension functions and field in this file help you to build layout dynamically,
@@ -70,6 +71,9 @@ inline fun ViewGroup.EditText(init: EditText.() -> Unit) =
 inline fun ViewGroup.HorizontalScrollView(init: HorizontalScrollView.() -> Unit) =
     HorizontalScrollView(context).apply(init).also { addView(it) }
 
+inline fun ViewGroup.ViewPager2(init: ViewPager2.() -> Unit) =
+    ViewPager2(context).apply(init).also { addView(it) }
+
 inline fun ConstraintLayout.Guideline(init: Guideline.() -> Unit) =
     Guideline(context).apply(init).also { addView(it) }
 
@@ -112,6 +116,9 @@ inline fun Context.ViewFlipper(init: ViewFlipper.() -> Unit) =
 inline fun Context.HorizontalScrollView(init: HorizontalScrollView.() -> Unit) =
     HorizontalScrollView(this).apply(init)
 
+inline fun Context.ViewPager2(init: ViewPager2.() -> Unit) =
+    ViewPager2(this).apply(init)
+
 inline fun Fragment.ConstraintLayout(init: ConstraintLayout.() -> Unit) =
     context?.let { ConstraintLayout(it).apply(init) }
 
@@ -144,6 +151,9 @@ inline fun Fragment.EditText(init: EditText.() -> Unit) =
 
 inline fun Fragment.HorizontalScrollView(init: HorizontalScrollView.() -> Unit) =
     context?.let { HorizontalScrollView(it).apply(init) }
+
+inline fun Fragment.ViewPager2(init: ViewPager2.() -> Unit) =
+    context?.let { ViewPager2(it).apply(init) }
 //</editor-fold>
 
 //<editor-fold desc="View extend field">
