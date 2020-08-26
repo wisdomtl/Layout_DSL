@@ -571,6 +571,14 @@ inline var View.bind: Binder?
         value?.action?.invoke(this, value.data )
     }
 
+inline var View.fitsSystemWindows:Boolean
+    get() {
+        return false
+    }
+    set(value) {
+        fitsSystemWindows = value
+    }
+
 inline var ImageView.src: Int
     get() {
         return -1
