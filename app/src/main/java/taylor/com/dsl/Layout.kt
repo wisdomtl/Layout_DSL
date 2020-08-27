@@ -119,6 +119,9 @@ inline fun Context.HorizontalScrollView(init: HorizontalScrollView.() -> Unit) =
 inline fun Context.ViewPager2(init: ViewPager2.() -> Unit) =
     ViewPager2(this).apply(init)
 
+inline fun Context.RecyclerView(init: RecyclerView.() -> Unit) =
+    RecyclerView(this).apply(init)
+
 inline fun Fragment.ConstraintLayout(init: ConstraintLayout.() -> Unit) =
     context?.let { ConstraintLayout(it).apply(init) }
 
@@ -154,6 +157,9 @@ inline fun Fragment.HorizontalScrollView(init: HorizontalScrollView.() -> Unit) 
 
 inline fun Fragment.ViewPager2(init: ViewPager2.() -> Unit) =
     context?.let { ViewPager2(it).apply(init) }
+
+inline fun Fragment.RecyclerView(init: RecyclerView.() -> Unit) =
+    context?.let { RecyclerView(it).apply(init) }
 //</editor-fold>
 
 //<editor-fold desc="View extend field">
