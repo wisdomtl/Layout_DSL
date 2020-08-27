@@ -2,7 +2,6 @@ package taylor.com.dsl
 
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Typeface
 import android.text.Editable
@@ -483,7 +482,7 @@ inline var View.align_horizontal_to: String
         end_toEndOf = value
     }
 
-inline var View.width_percentage:Float
+inline var View.width_percentage: Float
     get() {
         return -1f
     }
@@ -494,7 +493,7 @@ inline var View.width_percentage:Float
         }
     }
 
-inline var View.height_percentage:Float
+inline var View.height_percentage: Float
     get() {
         return -1f
     }
@@ -584,10 +583,10 @@ inline var View.bind: Binder?
         return null
     }
     set(value) {
-        value?.action?.invoke(this, value.data )
+        value?.action?.invoke(this, value.data)
     }
 
-inline var View.fitsSystemWindows:Boolean
+inline var View.fitsSystemWindows: Boolean
     get() {
         return false
     }
@@ -631,6 +630,38 @@ inline var TextView.fontFamily: Int
     }
     set(value) {
         typeface = ResourcesCompat.getFont(context, value)
+    }
+
+inline var TextView.drawable_start: Int
+    get() {
+        return -1
+    }
+    set(value) {
+        setCompoundDrawablesRelativeWithIntrinsicBounds(value, 0, 0, 0)
+    }
+
+inline var TextView.drawable_end: Int
+    get() {
+        return -1
+    }
+    set(value) {
+        setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, value, 0)
+    }
+
+inline var TextView.drawable_top: Int
+    get() {
+        return -1
+    }
+    set(value) {
+        setCompoundDrawablesRelativeWithIntrinsicBounds(0, value, 0, 0)
+    }
+
+inline var TextView.drawable_bottom: Int
+    get() {
+        return -1
+    }
+    set(value) {
+        setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, value)
     }
 
 inline var TextView.onTextChange: TextWatcher
