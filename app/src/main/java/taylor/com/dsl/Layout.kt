@@ -664,6 +664,14 @@ inline var TextView.drawable_bottom: Int
         setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, value)
     }
 
+inline var TextView.drawable_padding:Int
+    get() {
+        return  0
+    }
+    set(value) {
+        compoundDrawablePadding  = value
+    }
+
 inline var TextView.onTextChange: TextWatcher
     get() {
         return TextWatcher()
