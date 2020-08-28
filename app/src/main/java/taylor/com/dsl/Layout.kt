@@ -568,6 +568,9 @@ inline var View.layout_visibility: Int
         visibility = value
     }
 
+/**
+ * bind async data
+ */
 inline var View.bindLiveData: LiveDataBinder?
     get() {
         return null
@@ -578,12 +581,26 @@ inline var View.bindLiveData: LiveDataBinder?
         }
     }
 
+/**
+ * old fashion for binding data
+ */
 inline var View.bind: Binder?
     get() {
         return null
     }
     set(value) {
         value?.action?.invoke(this, value.data)
+    }
+
+/**
+ * bind sync data
+ */
+inline var View.bindData: ()->Unit
+    get() {
+        return {}
+    }
+    set(value) {
+        value()
     }
 
 inline var View.fitsSystemWindows: Boolean
