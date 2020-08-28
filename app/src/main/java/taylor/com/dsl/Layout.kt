@@ -30,57 +30,56 @@ import androidx.viewpager2.widget.ViewPager2
  * which has a better performance than xml files and more readable than normal java and kotlin code
  */
 //<editor-fold desc="widget creation function">
-inline fun ViewGroup.TextView(init: TextView.() -> Unit) =
-    TextView(context).apply(init).also { addView(it) }
+inline fun ViewGroup.TextView(autoAdd: Boolean = true, init: TextView.() -> Unit) =
+    TextView(context).apply(init).also { if (autoAdd) addView(it) }
 
+inline fun ViewGroup.ImageView(autoAdd: Boolean = true, init: ImageView.() -> Unit) =
+    ImageView(context).apply(init).also { if (autoAdd) addView(it) }
 
-inline fun ViewGroup.ImageView(init: ImageView.() -> Unit) =
-    ImageView(context).apply(init).also { addView(it) }
+inline fun ViewGroup.Button(autoAdd: Boolean = true, init: Button.() -> Unit) =
+    Button(context).apply(init).also { if (autoAdd) addView(it) }
 
-inline fun ViewGroup.Button(init: Button.() -> Unit) =
-    Button(context).apply(init).also { addView(it) }
+inline fun ViewGroup.View(autoAdd: Boolean = true, init: View.() -> Unit): View =
+    View(context).apply(init).also { if (autoAdd) addView(it) }
 
-inline fun ViewGroup.View(init: View.() -> Unit): View =
-    View(context).apply(init).also { addView(it) }
+inline fun ViewGroup.RelativeLayout(autoAdd: Boolean = true, init: RelativeLayout.() -> Unit) =
+    RelativeLayout(context).apply(init).also { if (autoAdd) addView(it) }
 
-inline fun ViewGroup.RelativeLayout(init: RelativeLayout.() -> Unit) =
-    RelativeLayout(context).apply(init).also { addView(it) }
+inline fun ViewGroup.LinearLayout(autoAdd: Boolean = true, init: LinearLayout.() -> Unit) =
+    LinearLayout(context).apply(init).also { if (autoAdd) addView(it) }
 
-inline fun ViewGroup.LinearLayout(init: LinearLayout.() -> Unit) =
-    LinearLayout(context).apply(init).also { addView(it) }
+inline fun ViewGroup.NestedScrollView(autoAdd: Boolean = true, init: NestedScrollView.() -> Unit) =
+    NestedScrollView(context).apply(init).also { if (autoAdd) addView(it) }
 
-inline fun ViewGroup.NestedScrollView(init: NestedScrollView.() -> Unit) =
-    NestedScrollView(context).apply(init).also { addView(it) }
+inline fun ViewGroup.RecyclerView(autoAdd: Boolean = true, init: RecyclerView.() -> Unit) =
+    RecyclerView(context).apply(init).also { if (autoAdd) addView(it) }
 
-inline fun ViewGroup.RecyclerView(init: RecyclerView.() -> Unit) =
-    RecyclerView(context).apply(init).also { addView(it) }
+inline fun ViewGroup.ConstraintLayout(autoAdd: Boolean = true, init: ConstraintLayout.() -> Unit) =
+    ConstraintLayout(context).apply(init).also { if (autoAdd) addView(it) }
 
-inline fun ViewGroup.ConstraintLayout(init: ConstraintLayout.() -> Unit) =
-    ConstraintLayout(context).apply(init).also { addView(it) }
+inline fun ViewGroup.FrameLayout(autoAdd: Boolean = true, init: FrameLayout.() -> Unit) =
+    FrameLayout(context).apply(init).also { if (autoAdd) addView(it) }
 
-inline fun ViewGroup.FrameLayout(init: FrameLayout.() -> Unit) =
-    FrameLayout(context).apply(init).also { addView(it) }
+inline fun ViewGroup.ViewFlipper(autoAdd: Boolean = true, init: ViewFlipper.() -> Unit) =
+    ViewFlipper(context).apply(init).also { if (autoAdd) addView(it) }
 
-inline fun ViewGroup.ViewFlipper(init: ViewFlipper.() -> Unit) =
-    ViewFlipper(context).apply(init).also { addView(it) }
+inline fun ViewGroup.EditText(autoAdd: Boolean = true, init: EditText.() -> Unit) =
+    EditText(context).apply(init).also { if (autoAdd) addView(it) }
 
-inline fun ViewGroup.EditText(init: EditText.() -> Unit) =
-    EditText(context).apply(init).also { addView(it) }
+inline fun ViewGroup.HorizontalScrollView(autoAdd: Boolean = true, init: HorizontalScrollView.() -> Unit) =
+    HorizontalScrollView(context).apply(init).also { if (autoAdd) addView(it) }
 
-inline fun ViewGroup.HorizontalScrollView(init: HorizontalScrollView.() -> Unit) =
-    HorizontalScrollView(context).apply(init).also { addView(it) }
+inline fun ViewGroup.ViewPager2(autoAdd: Boolean = true, init: ViewPager2.() -> Unit) =
+    ViewPager2(context).apply(init).also { if (autoAdd) addView(it) }
 
-inline fun ViewGroup.ViewPager2(init: ViewPager2.() -> Unit) =
-    ViewPager2(context).apply(init).also { addView(it) }
+inline fun ConstraintLayout.Guideline(autoAdd: Boolean = true, init: Guideline.() -> Unit) =
+    Guideline(context).apply(init).also { if (autoAdd) addView(it) }
 
-inline fun ConstraintLayout.Guideline(init: Guideline.() -> Unit) =
-    Guideline(context).apply(init).also { addView(it) }
+inline fun ConstraintLayout.Flow(autoAdd: Boolean = true, init: Flow.() -> Unit) =
+    Flow(context).apply(init).also { if (autoAdd) addView(it) }
 
-inline fun ConstraintLayout.Flow(init: Flow.() -> Unit) =
-    Flow(context).apply(init).also { addView(it) }
-
-inline fun ConstraintLayout.Layer(init: Layer.() -> Unit) =
-    Layer(context).apply(init).also { addView(it) }
+inline fun ConstraintLayout.Layer(autoAdd: Boolean = true, init: Layer.() -> Unit) =
+    Layer(context).apply(init).also { if (autoAdd) addView(it) }
 
 inline fun Context.ConstraintLayout(init: ConstraintLayout.() -> Unit): ConstraintLayout =
     ConstraintLayout(this).apply(init)
@@ -595,7 +594,7 @@ inline var View.bind: Binder?
 /**
  * bind sync data
  */
-inline var View.bindData: ()->Unit
+inline var View.bindData: () -> Unit
     get() {
         return {}
     }
@@ -681,12 +680,12 @@ inline var TextView.drawable_bottom: Int
         setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, value)
     }
 
-inline var TextView.drawable_padding:Int
+inline var TextView.drawable_padding: Int
     get() {
-        return  0
+        return 0
     }
     set(value) {
-        compoundDrawablePadding  = value
+        compoundDrawablePadding = value
     }
 
 inline var TextView.onTextChange: TextWatcher
