@@ -685,7 +685,7 @@ inline var TextView.drawable_padding: Int
         return 0
     }
     set(value) {
-        compoundDrawablePadding = value
+        compoundDrawablePadding = value.dp
     }
 
 inline var TextView.onTextChange: TextWatcher
