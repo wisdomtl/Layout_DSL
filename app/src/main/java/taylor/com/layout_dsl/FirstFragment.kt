@@ -247,7 +247,7 @@ class FirstFragment : Fragment() {
         Unit
     }
 
-    private val onListItemClick = { v: View, i: Int ->
+    private val onListItemClick = { v: View, i: Int,x:Float,y:Float ->
         adapter.myBean?.get(i)?.let {
             nameLiveData.value = SpannableStringBuilder(it.name).apply {
                 setSpan(
