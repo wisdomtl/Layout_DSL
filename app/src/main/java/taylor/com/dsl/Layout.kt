@@ -306,6 +306,36 @@ inline var View.layout_gravity: Int
             }
     }
 
+inline var View.toCircleOf:String
+    get() {
+        return ""
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            circleConstraint = value.toLayoutId()
+        }
+    }
+
+inline var View.circle_radius: Int
+    get() {
+        return -1
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            circleRadius = value.dp
+        }
+    }
+
+inline var View.circle_angle:Float
+    get() {
+        return  -1f
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            circleAngle = value
+        }
+    }
+
 inline var View.start_toStartOf: String
     get() {
         return ""
