@@ -3,6 +3,7 @@ package taylor.com.dsl
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.Typeface
 import android.text.Editable
 import android.util.TypedValue
@@ -944,6 +945,35 @@ fun RecyclerView.setOnItemClickListener(listener: (View, Int, Float, Float) -> U
         override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
         }
     })
+}
+
+/**
+ * get relative position of this [View] relative to [otherView]
+ */
+fun View.getRelativeRectTo(otherView: View): Rect {
+    val parentRect = Rect().also { otherView.getGlobalVisibleRect(it) }
+    val childRect = Rect().also { getGlobalVisibleRect(it) }
+    return childRect.relativeTo(parentRect)
+}
+
+/**
+ *  listen click action for the child view of [RecyclerView]'s item
+ */
+inline fun <T : View> View.onChildViewClick(layoutId: String, x: Float, y: Float, clickAction: ((View) -> Unit)) {
+    find<T>(layoutId)?.let {childView->
+        childView.getRelativeRectTo(this).takeIf { it.contains(x.toInt(), y.toInt()) }?.let { clickAction(this) }
+    }
+}
+
+/**
+ * get the relative rect of the [Rect] according to the [otherRect] ,considering the [otherRect]'s left and top is zero
+ */
+fun Rect.relativeTo(otherRect: Rect): Rect {
+    val relativeLeft = left - otherRect.left
+    val relativeTop = top - otherRect.top
+    val relativeRight = relativeLeft + right - left
+    val relativeBottom = relativeTop + bottom - top
+    return Rect(relativeLeft, relativeTop, relativeRight, relativeBottom)
 }
 //</editor-fold>
 
