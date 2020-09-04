@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.util.TypedValue
 import android.view.*
@@ -548,6 +549,14 @@ inline var View.background_res: Int
     }
     set(value) {
         setBackgroundResource(value)
+    }
+
+inline var View.background_drawable:Drawable?
+    get() {
+        return null
+    }
+    set(value) {
+        value?.let { background = it }
     }
 
 inline var View.margin_top: Int
