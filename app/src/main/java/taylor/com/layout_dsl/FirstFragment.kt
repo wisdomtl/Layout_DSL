@@ -19,7 +19,7 @@ import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.SimpleTarget
 import taylor.com.bean.User
 import taylor.com.dsl.*
-import test.taylor.com.taylorcode.kotlin.override_property.MyAdapter
+import taylor.com.views.MyAdapter
 
 class FirstFragment : Fragment() {
 
@@ -248,26 +248,26 @@ class FirstFragment : Fragment() {
     }
 
     private val onListItemClick = { v: View, i: Int,x:Float,y:Float ->
-        adapter.myBean?.get(i)?.let {
-            nameLiveData.value = SpannableStringBuilder(it.name).apply {
-                setSpan(
-                    ForegroundColorSpan(Color.RED),
-                    0,
-                    it.name.indexOf(" "),
-                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
-                )
-                val color = if (it.gender == 1) "#b300ff00" else "#b3ff00ff"
-                setSpan(
-                    ForegroundColorSpan(Color.parseColor(color)),
-                    it.name.indexOf(" "),
-                    it.name.lastIndex + 1,
-                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
-                )
-            }
-
-            if (it.gender == 1) Glide.with(context).load(diamondUrl).asBitmap().into(target)
-            else Glide.with(context).load(coinUrl).asBitmap().into(target)
-        }
+//        adapter.myBean?.get(i)?.let {
+//            nameLiveData.value = SpannableStringBuilder(it.name).apply {
+//                setSpan(
+//                    ForegroundColorSpan(Color.RED),
+//                    0,
+//                    it.name.indexOf(" "),
+//                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+//                )
+//                val color = if (it.gender == 1) "#b300ff00" else "#b3ff00ff"
+//                setSpan(
+//                    ForegroundColorSpan(Color.parseColor(color)),
+//                    it.name.indexOf(" "),
+//                    it.name.lastIndex + 1,
+//                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+//                )
+//            }
+//
+//            if (it.gender == 1) Glide.with(context).load(diamondUrl).asBitmap().into(target)
+//            else Glide.with(context).load(coinUrl).asBitmap().into(target)
+//        }
         Unit
     }
 

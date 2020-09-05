@@ -68,7 +68,10 @@ inline fun ViewGroup.ViewFlipper(autoAdd: Boolean = true, init: ViewFlipper.() -
 inline fun ViewGroup.EditText(autoAdd: Boolean = true, init: EditText.() -> Unit) =
     EditText(context).apply(init).also { if (autoAdd) addView(it) }
 
-inline fun ViewGroup.HorizontalScrollView(autoAdd: Boolean = true, init: HorizontalScrollView.() -> Unit) =
+inline fun ViewGroup.HorizontalScrollView(
+    autoAdd: Boolean = true,
+    init: HorizontalScrollView.() -> Unit
+) =
     HorizontalScrollView(context).apply(init).also { if (autoAdd) addView(it) }
 
 inline fun ViewGroup.ViewPager2(autoAdd: Boolean = true, init: ViewPager2.() -> Unit) =
@@ -308,7 +311,7 @@ inline var View.layout_gravity: Int
             }
     }
 
-inline var View.toCircleOf:String
+inline var View.toCircleOf: String
     get() {
         return ""
     }
@@ -328,9 +331,9 @@ inline var View.circle_radius: Int
         }
     }
 
-inline var View.circle_angle:Float
+inline var View.circle_angle: Float
     get() {
-        return  -1f
+        return -1f
     }
     set(value) {
         layoutParams = layoutParams.append {
@@ -551,7 +554,7 @@ inline var View.background_res: Int
         setBackgroundResource(value)
     }
 
-inline var View.background_drawable:Drawable?
+inline var View.background_drawable: Drawable?
     get() {
         return null
     }
@@ -811,9 +814,9 @@ var View.onClick: (View) -> Unit
         setOnClickListener { v -> value(v) }
     }
 
-var RecyclerView.onItemClick: (View, Int,Float,Float) -> Unit
+var RecyclerView.onItemClick: (View, Int, Float, Float) -> Unit
     get() {
-        return { _, _,_,_ -> }
+        return { _, _, _, _ -> }
     }
     set(value) {
         setOnItemClickListener(value)
@@ -920,7 +923,12 @@ fun RecyclerView.setOnItemClickListener(listener: (View, Int, Float, Float) -> U
             override fun onSingleTapUp(e: MotionEvent?): Boolean {
                 e?.let {
                     findChildViewUnder(it.x, it.y)?.let { child ->
-                        listener(child, getChildAdapterPosition(child), it.x - child.left, it.y - child.top)
+                        listener(
+                            child,
+                            getChildAdapterPosition(child),
+                            it.x - child.left,
+                            it.y - child.top
+                        )
                     }
                 }
                 return false
@@ -930,11 +938,21 @@ fun RecyclerView.setOnItemClickListener(listener: (View, Int, Float, Float) -> U
                 return false
             }
 
-            override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+            override fun onFling(
+                e1: MotionEvent?,
+                e2: MotionEvent?,
+                velocityX: Float,
+                velocityY: Float
+            ): Boolean {
                 return false
             }
 
-            override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+            override fun onScroll(
+                e1: MotionEvent?,
+                e2: MotionEvent?,
+                distanceX: Float,
+                distanceY: Float
+            ): Boolean {
                 return false
             }
 
@@ -968,10 +986,16 @@ fun View.getRelativeRectTo(otherView: View): Rect {
 /**
  *  listen click action for the child view of [RecyclerView]'s item
  */
-inline fun <T : View> View.onChildViewClick(layoutId: String, x: Float, y: Float, clickAction: ((View) -> Unit)) {
-    find<T>(layoutId)?.let {childView->
-        childView.getRelativeRectTo(this).takeIf { it.contains(x.toInt(), y.toInt()) }?.let { clickAction(this) }
-    }
+inline fun View.onChildViewClick(
+    vararg layoutId: String,
+    x: Float,
+    y: Float,
+    clickAction: ((View) -> Unit)
+) {
+    layoutId.map { find<View>(it)?.getRelativeRectTo(this) }
+        .fold(Rect(), { init, rect -> init.apply { union(rect) } })
+        .takeIf { it.contains(x.toInt(), y.toInt()) }
+        ?.let { clickAction(this) }
 }
 
 /**
