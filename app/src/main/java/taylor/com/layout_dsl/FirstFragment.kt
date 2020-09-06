@@ -128,8 +128,8 @@ class FirstFragment : Fragment() {
                         text = it as CharSequence
                     }
                 }
-                bind = Binder("init title"){_,data->
-                        text = data.toString()
+                bind = Binder("init title") { _, data ->
+                    text = data.toString()
                 }
 
             }
@@ -235,7 +235,7 @@ class FirstFragment : Fragment() {
                 top_toBottomOf = "rvTest"
                 onTextChange = textWatcher {
                     onTextChanged = { text: CharSequence?, start: Int, count: Int, after: Int ->
-                        Log.v("ttaylor","tag=text change, FirstFragment.()  text=${text}")
+                        Log.v("ttaylor", "tag=text change, FirstFragment.()  text=${text}")
                     }
                 }
             }
@@ -247,7 +247,7 @@ class FirstFragment : Fragment() {
         Unit
     }
 
-    private val onListItemClick = { v: View, i: Int,x:Float,y:Float ->
+    private val onListItemClick = { v: View, i: Int, x: Float, y: Float ->
         adapter.myBean?.get(i)?.let {
             nameLiveData.value = SpannableStringBuilder(it.name).apply {
                 setSpan(
@@ -267,6 +267,9 @@ class FirstFragment : Fragment() {
 
             if (it.gender == 1) Glide.with(context).load(diamondUrl).asBitmap().into(target)
             else Glide.with(context).load(coinUrl).asBitmap().into(target)
+        }
+        v.onChildViewClick("tvStart", "tvEnd", x = x, y = y) {
+           Log.v("ttaylor","tag=adsf, FirstFragment.()  on two child clicked")
         }
         Unit
     }

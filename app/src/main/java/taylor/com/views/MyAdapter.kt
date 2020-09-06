@@ -10,27 +10,54 @@ class MyAdapter(var myBean: List<User>?) : RecyclerView.Adapter<MyViewHolder>() 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = parent.context.run {
             ConstraintLayout {
-                layout_height = 60
+                layout_height = 90
                 layout_width = match_parent
                 margin_end = 20
                 margin_start =20
+                background_color = "#eeeeee"
+
                 TextView {
                     layout_id = "tvContent"
                     layout_width = match_parent
-                    layout_height = 40
-                    textSize = 20f
+                    layout_height = wrap_content
+                    textSize = 15f
                     gravity = gravity_center
-                    center_horizontal = true
-                    center_vertical = true
+                    start_toStartOf = parent_id
+                    top_toTopOf = parent_id
                 }
 
                 View {
                     layout_id = "vDivider"
                     layout_width = match_parent
                     layout_height = 1
-                    background_color = "#ffffff"
-                    bottom_toBottomOf =  parent_id
+                    top_toBottomOf = "tvContent"
+                    background_color = "#888888"
                 }
+
+                TextView {
+                    layout_id = "tvStart"
+                    layout_width = wrap_content
+                    layout_height = wrap_content
+                    textSize = 26f
+                    textColor ="#3F4658"
+                    text = "start"
+                    start_toStartOf = parent_id
+                    top_toBottomOf = "vDivider"
+                    margin_top = 20
+                }
+
+                TextView {
+                    layout_id = "tvEnd"
+                    layout_width = wrap_content
+                    layout_height = wrap_content
+                    textSize = 26f
+                    textColor ="#3F4658"
+                    text = "end"
+                    end_toEndOf = parent_id
+                    align_vertical_to = "tvStart"
+                }
+
+
             }
         }
         return MyViewHolder(itemView)
