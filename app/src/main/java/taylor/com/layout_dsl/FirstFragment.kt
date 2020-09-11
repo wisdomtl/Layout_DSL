@@ -79,6 +79,11 @@ class FirstFragment : Fragment() {
                     gradientType = gradient_type_linear
                     orientation = gradient_orientation_top_bottom
                     gradient_colors = listOf("#ffff00","#0000ff")
+                    padding_start = 10
+                    padding_end = 10
+                    padding_top = 5
+                    padding_bottom = 5
+                    strokeAttr = Stroke(5,"#000000" ,2f,3f)
                 }
             }
 

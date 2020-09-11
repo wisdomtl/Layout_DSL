@@ -7,10 +7,12 @@ import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.text.Editable
 import android.util.TypedValue
 import android.view.*
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.helper.widget.Flow
 import androidx.constraintlayout.helper.widget.Layer
@@ -923,6 +925,15 @@ val Int.dp: Int
         ).toInt()
     }
 
+val Float.dp: Float
+    get() {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            this.toFloat(),
+            Resources.getSystem().displayMetrics
+        )
+    }
+
 fun ViewGroup.MarginLayoutParams.toConstraintLayoutParam() =
     ConstraintLayout.LayoutParams(width, height).also { it ->
         it.topMargin = this.topMargin
@@ -1123,13 +1134,69 @@ inline var GradientDrawable.gradient_colors: List<String>
     }
     set(value) {
         colors = value.map { Color.parseColor(it) }.toIntArray()
+    }
 
+inline var GradientDrawable.padding_start: Int
+    get() {
+        return -1
+    }
+    @RequiresApi(Build.VERSION_CODES.Q)
+    set(value) {
+        val paddingRect = Rect().also { getPadding(it) }
+        setPadding(value.dp, paddingRect.top, paddingRect.right, paddingRect.bottom)
+    }
+
+inline var GradientDrawable.padding_end: Int
+    get() {
+        return -1
+    }
+    @RequiresApi(Build.VERSION_CODES.Q)
+    set(value) {
+        val paddingRect = Rect().also { getPadding(it) }
+        setPadding(paddingRect.left, paddingRect.top, value.dp, paddingRect.bottom)
+    }
+
+inline var GradientDrawable.padding_top: Int
+    get() {
+        return -1
+    }
+    @RequiresApi(Build.VERSION_CODES.Q)
+    set(value) {
+        val paddingRect = Rect().also { getPadding(it) }
+        setPadding(paddingRect.left, value.dp, paddingRect.right, paddingRect.bottom)
+    }
+
+inline var GradientDrawable.padding_bottom: Int
+    get() {
+        return -1
+    }
+    @RequiresApi(Build.VERSION_CODES.Q)
+    set(value) {
+        val paddingRect = Rect().also { getPadding(it) }
+        setPadding(paddingRect.left, paddingRect.top, paddingRect.right, value.dp)
+    }
+
+inline var GradientDrawable.strokeAttr: Stroke?
+    get() {
+        return null
+    }
+    set(value) {
+        value?.apply { setStroke(width.dp, Color.parseColor(color), dashWidth.dp, dashGap.dp) }
     }
 
 /**
  * helper function for building [GradientDrawable]
  */
-fun shape(init: GradientDrawable.() -> Unit) = GradientDrawable().apply(init)
+inline fun shape(init: GradientDrawable.() -> Unit) = GradientDrawable().apply(init)
 
+/**
+ * helper class for set stroke for [GradientDrawable]
+ */
+data class Stroke(
+    var width: Int = 0,
+    var color: String = "#000000",
+    var dashWidth: Float = 0f,
+    var dashGap: Float = 0f
+)
 
 //</editor-fold>
