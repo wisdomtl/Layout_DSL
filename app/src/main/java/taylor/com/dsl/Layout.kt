@@ -821,6 +821,14 @@ var RecyclerView.onItemClick: (View, Int, Float, Float) -> Unit
     set(value) {
         setOnItemClickListener(value)
     }
+
+var RecyclerView.hasFixedSize:Boolean
+    get() {
+        return false
+    }
+    set(value) {
+        setHasFixedSize(value)
+    }
 //</editor-fold>
 
 
