@@ -32,6 +32,8 @@ class FirstFragment : Fragment() {
     private val nameLiveData = MutableLiveData<CharSequence>()
     private val nameColorLiveData = MutableLiveData<String>()
     private val avatarLiveData = MutableLiveData<Bitmap>()
+    private val commitLiveData = MutableLiveData<Boolean>()
+    private val contentLiveData = MutableLiveData<Boolean>().apply { value = false }
 
     private lateinit var rv: RecyclerView
 
@@ -84,6 +86,17 @@ class FirstFragment : Fragment() {
                     padding_top = 5
                     padding_bottom = 5
                     strokeAttr = Stroke(5,"#000000" ,2f,3f)
+                    color_state_list = listOf(
+                        intArrayOf(state_enable) to "#007EFF",
+                        intArrayOf(state_disable) to "#FDB2DA"
+                    )
+                }
+                bindLiveData = liveDataBinder(commitLiveData){
+                    action = {
+                        (it as? Boolean)?.let {
+                            isEnabled = it
+                        }
+                    }
                 }
             }
 
@@ -126,6 +139,9 @@ class FirstFragment : Fragment() {
                 src = R.drawable.diamond_tag
                 start_toStartOf = "ivBack"
                 top_toBottomOf = "vDivider"
+                onClick = {_:View ->
+                    commitLiveData.postValue(true)
+                }
             }
 
             TextView {
@@ -148,6 +164,10 @@ class FirstFragment : Fragment() {
                     text = data.toString()
                 }
 
+                onClick = {_:View->
+                    commitLiveData.postValue(false)
+                }
+
             }
 
             TextView {
@@ -160,6 +180,25 @@ class FirstFragment : Fragment() {
                 start_toStartOf = "ivDiamond"
                 top_toBottomOf = "ivDiamond"
                 end_toStartOf = "ivAvatar"
+                bindLiveData = liveDataBinder(contentLiveData){
+                    action = {
+                        (it as? Boolean)?.let {
+                            isEnabled = it
+                        }
+                    }
+                }
+                background_drawable_state_list = listOf(
+                    intArrayOf(state_enable) to shape {
+                        shape = shape_rectangle
+                        corner_radius = 10
+                        solid_color = "#FDB2DA"
+                    },
+                    intArrayOf(state_disable) to shape {
+                        shape = shape_rectangle
+                        corner_radius = 10
+                        solid_color= "#987654"
+                    }
+                )
             }
 
             ImageView {
@@ -171,6 +210,9 @@ class FirstFragment : Fragment() {
                 end_toEndOf = parent_id
                 start_toEndOf = "tvContent"
                 top_toTopOf = "tvContent"
+                onClick = {
+                    contentLiveData.postValue(contentLiveData.value?.not())
+                }
             }
 
             TextView {

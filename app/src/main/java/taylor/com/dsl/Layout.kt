@@ -1,12 +1,14 @@
 package taylor.com.dsl
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.StateListDrawable
 import android.os.Build
 import android.text.Editable
 import android.util.TypedValue
@@ -565,6 +567,18 @@ inline var View.background_drawable: Drawable?
         value?.let { background = it }
     }
 
+inline var View.background_drawable_state_list: List<Pair<IntArray, GradientDrawable>>
+    get() {
+        return listOf(intArrayOf() to GradientDrawable())
+    }
+    set(value) {
+        background = StateListDrawable().apply {
+            value.forEach { pair ->
+                addState(pair.first, pair.second)
+            }
+        }
+    }
+
 inline var View.margin_top: Int
     get() {
         return -1
@@ -912,6 +926,15 @@ val gradient_type_linear = GradientDrawable.LINEAR_GRADIENT
 val gradient_type_radial = GradientDrawable.RADIAL_GRADIENT
 val gradient_type_sweep = GradientDrawable.SWEEP_GRADIENT
 
+val state_enable = android.R.attr.state_enabled
+val state_disable = -android.R.attr.state_enabled
+val state_pressed = android.R.attr.state_pressed
+val state_unpressed = -android.R.attr.state_pressed
+val state_focused = android.R.attr.state_focused
+val state_unfocused = -android.R.attr.state_focused
+val state_selected = android.R.attr.state_selected
+val state_unselected = -android.R.attr.state_selected
+
 val parent_id = "0"
 //</editor-fold>
 
@@ -1182,6 +1205,21 @@ inline var GradientDrawable.strokeAttr: Stroke?
     }
     set(value) {
         value?.apply { setStroke(width.dp, Color.parseColor(color), dashWidth.dp, dashGap.dp) }
+    }
+
+inline var GradientDrawable.color_state_list: List<Pair<IntArray, String>>
+    get() {
+        return listOf(intArrayOf() to "#000000")
+    }
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    set(value) {
+        val states = mutableListOf<IntArray>()
+        val colors = mutableListOf<Int>()
+        value.forEach { pair ->
+            states.add(pair.first)
+            colors.add(Color.parseColor(pair.second))
+        }
+        color = ColorStateList(states.toTypedArray(), colors.toIntArray())
     }
 
 /**
