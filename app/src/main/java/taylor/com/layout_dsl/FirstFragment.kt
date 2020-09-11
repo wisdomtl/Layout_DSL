@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -65,10 +66,20 @@ class FirstFragment : Fragment() {
                 layout_height = wrap_content
                 text = "commit"
                 textSize = 30f
-                layout_visibility = gone
+                gravity = gravity_center
                 textStyle = bold
                 align_vertical_to = "ivBack"
                 center_horizontal = true
+                onClick = {_:View->
+                    Toast.makeText(context,"on click",Toast.LENGTH_LONG).show()
+                }
+                shape = shape {
+                    corner_radius = 10
+                    shape = shape_rectangle
+                    gradientType = gradient_type_linear
+                    orientation = gradient_orientation_top_bottom
+                    gradient_colors = listOf("#ffff00","#0000ff")
+                }
             }
 
             ImageView {

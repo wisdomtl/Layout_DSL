@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.text.Editable
 import android.util.TypedValue
 import android.view.*
@@ -653,6 +654,17 @@ inline var View.fitsSystemWindows: Boolean
         fitsSystemWindows = value
     }
 
+/**
+ * use this attribute to build shape dynamically, getting rid of "shape.xml"
+ */
+inline var View.shape: GradientDrawable
+    get() {
+        return GradientDrawable()
+    }
+    set(value) {
+        background = value
+    }
+
 inline var ImageView.src: Int
     get() {
         return -1
@@ -822,7 +834,7 @@ var RecyclerView.onItemClick: (View, Int, Float, Float) -> Unit
         setOnItemClickListener(value)
     }
 
-var RecyclerView.hasFixedSize:Boolean
+var RecyclerView.hasFixedSize: Boolean
     get() {
         return false
     }
@@ -879,6 +891,24 @@ val spread_inside = ConstraintLayout.LayoutParams.CHAIN_SPREAD_INSIDE
 val wrap_none = Flow.WRAP_NONE
 val wrap_chain = Flow.WRAP_CHAIN
 val wrap_aligned = Flow.WRAP_ALIGNED
+
+val gradient_orientation_top_bottom = GradientDrawable.Orientation.TOP_BOTTOM
+val gradient_orientation_tr_bl = GradientDrawable.Orientation.TR_BL
+val gradient_orientation_right_left = GradientDrawable.Orientation.RIGHT_LEFT
+val gradient_orientation_br_tl = GradientDrawable.Orientation.BR_TL
+val gradient_orientation_bottom_top = GradientDrawable.Orientation.BOTTOM_TOP
+val gradient_orientation_bl_tr = GradientDrawable.Orientation.BL_TR
+val gradient_orientation_left_right = GradientDrawable.Orientation.LEFT_RIGHT
+val gradient_orientation_tl_br = GradientDrawable.Orientation.TL_BR
+
+val shape_rectangle = GradientDrawable.RECTANGLE
+val shape_oval = GradientDrawable.OVAL
+val shape_line = GradientDrawable.LINE
+val shape_ring = GradientDrawable.RING
+
+val gradient_type_linear = GradientDrawable.LINEAR_GRADIENT
+val gradient_type_radial = GradientDrawable.RADIAL_GRADIENT
+val gradient_type_sweep = GradientDrawable.SWEEP_GRADIENT
 
 val parent_id = "0"
 //</editor-fold>
@@ -1057,6 +1087,49 @@ fun liveDataBinder(liveData: LiveData<*>?, init: LiveDataBinder.() -> Unit): Liv
     LiveDataBinder(liveData).apply(init)
 
 class Binder(var data: Any?, var action: ((View, Any?) -> Unit)? = null)
+//</editor-fold>
+
+//<editor-fold desc="building helper class">
+/**
+ * helper attribute for building [GradientDrawable]
+ */
+inline var GradientDrawable.solid_color: String
+    get() {
+        return ""
+    }
+    set(value) {
+        setColor(Color.parseColor(value))
+    }
+
+inline var GradientDrawable.corner_radius: Int
+    get() {
+        return -1
+    }
+    set(value) {
+        cornerRadius = value.dp.toFloat()
+    }
+
+inline var GradientDrawable.corner_radii: IntArray
+    get() {
+        return intArrayOf()
+    }
+    set(value) {
+        cornerRadii = value.map { it.dp.toFloat() }.toFloatArray()
+    }
+
+inline var GradientDrawable.gradient_colors: List<String>
+    get() {
+        return emptyList()
+    }
+    set(value) {
+        colors = value.map { Color.parseColor(it) }.toIntArray()
+
+    }
+
+/**
+ * helper function for building [GradientDrawable]
+ */
+fun shape(init: GradientDrawable.() -> Unit) = GradientDrawable().apply(init)
 
 
 //</editor-fold>
