@@ -1,10 +1,13 @@
-package test.taylor.com.taylorcode.kotlin.override_property
+package taylor.com.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import taylor.com.bean.User
 import taylor.com.dsl.*
 
+/**
+ * show how use layout dsl in [RecyclerView.Adapter]
+ */
 class MyAdapter(var myBean: List<User>?) : RecyclerView.Adapter<MyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {

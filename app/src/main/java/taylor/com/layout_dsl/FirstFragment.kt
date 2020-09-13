@@ -20,7 +20,7 @@ import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.SimpleTarget
 import taylor.com.bean.User
 import taylor.com.dsl.*
-import test.taylor.com.taylorcode.kotlin.override_property.MyAdapter
+import taylor.com.adapter.MyAdapter
 
 class FirstFragment : Fragment() {
 

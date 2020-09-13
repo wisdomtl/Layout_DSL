@@ -1,4 +1,4 @@
-package test.taylor.com.taylorcode.kotlin.override_property
+package taylor.com.adapter
 
 import android.graphics.Color
 import android.view.View
