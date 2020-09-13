@@ -1,10 +1,9 @@
 package taylor.com.dsl
 
 import android.content.Context
-import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import taylor.com.selector_kt.Selector
+import taylor.com.views.Selector
 import taylor.com.views.LineFeedLayout
 import taylor.com.views.ProgressBar
 

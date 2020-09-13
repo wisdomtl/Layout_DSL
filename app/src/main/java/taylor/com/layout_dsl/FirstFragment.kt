@@ -22,6 +22,9 @@ import taylor.com.bean.User
 import taylor.com.dsl.*
 import taylor.com.adapter.MyAdapter
 
+/**
+ * show how to use layout dsl in [Fragment]
+ */
 class FirstFragment : Fragment() {
 
     private val diamondUrl =
