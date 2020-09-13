@@ -567,7 +567,7 @@ inline var View.background_drawable: Drawable?
         value?.let { background = it }
     }
 
-inline var View.background_drawable_state_list: List<Pair<IntArray, GradientDrawable>>
+inline var View.background_drawable_state_list: List<Pair<IntArray, Drawable>>
     get() {
         return listOf(intArrayOf() to GradientDrawable())
     }
@@ -908,14 +908,14 @@ val wrap_none = Flow.WRAP_NONE
 val wrap_chain = Flow.WRAP_CHAIN
 val wrap_aligned = Flow.WRAP_ALIGNED
 
-val gradient_orientation_top_bottom = GradientDrawable.Orientation.TOP_BOTTOM
-val gradient_orientation_tr_bl = GradientDrawable.Orientation.TR_BL
-val gradient_orientation_right_left = GradientDrawable.Orientation.RIGHT_LEFT
-val gradient_orientation_br_tl = GradientDrawable.Orientation.BR_TL
-val gradient_orientation_bottom_top = GradientDrawable.Orientation.BOTTOM_TOP
-val gradient_orientation_bl_tr = GradientDrawable.Orientation.BL_TR
-val gradient_orientation_left_right = GradientDrawable.Orientation.LEFT_RIGHT
-val gradient_orientation_tl_br = GradientDrawable.Orientation.TL_BR
+val gradient_top_bottom = GradientDrawable.Orientation.TOP_BOTTOM
+val gradient_tr_bl = GradientDrawable.Orientation.TR_BL
+val gradient_right_left = GradientDrawable.Orientation.RIGHT_LEFT
+val gradient_br_tl = GradientDrawable.Orientation.BR_TL
+val gradient_bottom_top = GradientDrawable.Orientation.BOTTOM_TOP
+val gradient_bl_tr = GradientDrawable.Orientation.BL_TR
+val gradient_left_right = GradientDrawable.Orientation.LEFT_RIGHT
+val gradient_tl_br = GradientDrawable.Orientation.TL_BR
 
 val shape_rectangle = GradientDrawable.RECTANGLE
 val shape_oval = GradientDrawable.OVAL

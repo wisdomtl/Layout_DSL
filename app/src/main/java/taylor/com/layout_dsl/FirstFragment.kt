@@ -72,26 +72,27 @@ class FirstFragment : Fragment() {
                 textStyle = bold
                 align_vertical_to = "ivBack"
                 center_horizontal = true
-                onClick = {_:View->
-                    Toast.makeText(context,"on click",Toast.LENGTH_LONG).show()
+                padding = 10
+                onClick = { _: View ->
+                    Toast.makeText(context, "on click", Toast.LENGTH_LONG).show()
                 }
                 shape = shape {
                     corner_radius = 10
                     shape = shape_rectangle
                     gradientType = gradient_type_linear
-                    orientation = gradient_orientation_top_bottom
-                    gradient_colors = listOf("#ffff00","#0000ff")
+                    orientation = gradient_left_right
+                    gradient_colors = listOf("#ffff00", "#0000ff")
                     padding_start = 10
                     padding_end = 10
                     padding_top = 5
                     padding_bottom = 5
-                    strokeAttr = Stroke(5,"#000000" ,2f,3f)
+                    strokeAttr = Stroke(5, "#000000", 2f, 3f)
                     color_state_list = listOf(
                         intArrayOf(state_enable) to "#007EFF",
                         intArrayOf(state_disable) to "#FDB2DA"
                     )
                 }
-                bindLiveData = liveDataBinder(commitLiveData){
+                bindLiveData = liveDataBinder(commitLiveData) {
                     action = {
                         (it as? Boolean)?.let {
                             isEnabled = it
@@ -139,7 +140,7 @@ class FirstFragment : Fragment() {
                 src = R.drawable.diamond_tag
                 start_toStartOf = "ivBack"
                 top_toBottomOf = "vDivider"
-                onClick = {_:View ->
+                onClick = { _: View ->
                     commitLiveData.postValue(true)
                 }
             }
@@ -164,7 +165,7 @@ class FirstFragment : Fragment() {
                     text = data.toString()
                 }
 
-                onClick = {_:View->
+                onClick = { _: View ->
                     commitLiveData.postValue(false)
                 }
 
@@ -180,7 +181,7 @@ class FirstFragment : Fragment() {
                 start_toStartOf = "ivDiamond"
                 top_toBottomOf = "ivDiamond"
                 end_toStartOf = "ivAvatar"
-                bindLiveData = liveDataBinder(contentLiveData){
+                bindLiveData = liveDataBinder(contentLiveData) {
                     action = {
                         (it as? Boolean)?.let {
                             isEnabled = it
@@ -196,7 +197,7 @@ class FirstFragment : Fragment() {
                     intArrayOf(state_disable) to shape {
                         shape = shape_rectangle
                         corner_radius = 10
-                        solid_color= "#987654"
+                        solid_color = "#80FDB2DA"
                     }
                 )
             }
@@ -327,7 +328,7 @@ class FirstFragment : Fragment() {
             else Glide.with(context).load(coinUrl).asBitmap().into(target)
         }
         v.onChildViewClick("tvStart", "tvEnd", x = x, y = y) {
-           Log.v("ttaylor","tag=adsf, FirstFragment.()  on two child clicked")
+            Log.v("ttaylor", "tag=adsf, FirstFragment.()  on two child clicked")
         }
         Unit
     }
