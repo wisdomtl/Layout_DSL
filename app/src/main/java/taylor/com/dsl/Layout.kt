@@ -619,6 +619,26 @@ inline var View.margin_end: Int
         }
     }
 
+inline var View.guide_percentage: Float
+    get() {
+        return -1f
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            guidePercent = value
+        }
+    }
+
+inline var View.guide_orientation: Int
+    get() {
+        return 1
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            orientation = value
+        }
+    }
+
 inline var View.layout_visibility: Int
     get() {
         return -1
