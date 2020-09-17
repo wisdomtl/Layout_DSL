@@ -920,7 +920,7 @@ val gravity_top = Gravity.TOP
 val gravity_center_horizontal = Gravity.CENTER_HORIZONTAL
 val gravity_center_vertical = Gravity.CENTER_VERTICAL
 
-val scale_fix_xy = ImageView.ScaleType.FIT_XY
+val scale_fit_xy = ImageView.ScaleType.FIT_XY
 val scale_center_crop = ImageView.ScaleType.CENTER_CROP
 val scale_center = ImageView.ScaleType.CENTER
 val scale_center_inside = ImageView.ScaleType.CENTER_INSIDE
