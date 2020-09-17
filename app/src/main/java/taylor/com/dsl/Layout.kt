@@ -31,6 +31,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.actor
+import kotlinx.coroutines.launch
+import taylor.com.coroutine.autoDispose
+import kotlin.math.abs
 
 /**
  * the extension functions and field in this file help you to build layout dynamically,
@@ -862,6 +868,16 @@ var View.onClick: (View) -> Unit
         setOnClickListener { v -> value(v) }
     }
 
+var View.shakelessClick: (View) -> Unit
+    get() {
+        return {}
+    }
+    set(value) {
+        setShakelessClickListener(1000){
+            value(it)
+        }
+    }
+
 var RecyclerView.onItemClick: (View, Int, Float, Float) -> Unit
     get() {
         return { _, _, _, _ -> }
@@ -1098,6 +1114,37 @@ inline fun View.onChildViewClick(
         .fold(Rect()) { init, rect -> init.apply { union(rect) } }
         .takeIf { it.contains(x.toInt(), y.toInt()) }
         ?.let { clickAction.invoke(clickedView) }
+}
+
+/**
+ * a new View.OnClickListener which prevents click shaking
+ */
+fun View.setShakelessClickListener(threshold: Long, onClick: (View) -> Unit) {
+    class Click(
+        var view: View? = null,
+        var clickTime: Long = -1,
+        var onClick: ((View?) -> Unit)? = null
+    ) {
+        fun isShake(click: Click) = abs(clickTime - click.clickTime) < threshold
+    }
+
+    val mainScope = MainScope()
+    val clickActor = mainScope.actor<Click>(capacity = Channel.UNLIMITED) {
+        var preClick: Click = Click()
+        for (click in channel) {
+            if (!click.isShake(preClick)) {
+                click.onClick?.invoke(click.view)
+            }
+            preClick = click
+        }
+    }.autoDispose(this)
+    setOnClickListener { view ->
+        mainScope.launch {
+            clickActor.send(
+                Click(view, System.currentTimeMillis()) { onClick(view) }
+            )
+        }.autoDispose(this)
+    }
 }
 
 /**
