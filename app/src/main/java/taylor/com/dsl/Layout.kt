@@ -723,20 +723,36 @@ inline var TextView.textRes: Int
         setText(value)
     }
 
-inline var TextView.line_space_multiplier:Float
+inline var TextView.hint_color: String
     get() {
-        return -1f
+        return ""
     }
     set(value) {
-        setLineSpacing(lineSpacingExtra,value)
+        setHintTextColor(Color.parseColor(value))
     }
 
-inline var TextView.line_space_extra:Float
+inline var TextView.hint_text_res: Int
+    get() {
+        return -1
+    }
+    set(value) {
+        setHint(value)
+    }
+
+inline var TextView.line_space_multiplier: Float
     get() {
         return -1f
     }
     set(value) {
-        setLineSpacing(value,lineSpacingMultiplier)
+        setLineSpacing(lineSpacingExtra, value)
+    }
+
+inline var TextView.line_space_extra: Float
+    get() {
+        return -1f
+    }
+    set(value) {
+        setLineSpacing(value, lineSpacingMultiplier)
     }
 
 inline var TextView.textStyle: Int
@@ -889,7 +905,7 @@ var View.shakelessClick: (View) -> Unit
         return {}
     }
     set(value) {
-        setShakelessClickListener(1000){
+        setShakelessClickListener(1000) {
             value(it)
         }
     }
