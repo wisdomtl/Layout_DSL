@@ -723,6 +723,22 @@ inline var TextView.textRes: Int
         setText(value)
     }
 
+inline var TextView.line_space_multiplier:Float
+    get() {
+        return -1f
+    }
+    set(value) {
+        setLineSpacing(lineSpacingExtra,value)
+    }
+
+inline var TextView.line_space_extra:Float
+    get() {
+        return -1f
+    }
+    set(value) {
+        setLineSpacing(value,lineSpacingMultiplier)
+    }
+
 inline var TextView.textStyle: Int
     get() {
         return -1
