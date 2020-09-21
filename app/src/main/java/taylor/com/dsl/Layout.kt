@@ -11,6 +11,8 @@ import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
 import android.os.Build
 import android.text.Editable
+import android.text.InputFilter
+import android.text.InputFilter.LengthFilter
 import android.util.TypedValue
 import android.view.*
 import android.widget.*
@@ -713,6 +715,14 @@ inline var ImageView.src: Int
     }
     set(value) {
         setImageResource(value)
+    }
+
+inline var TextView.maxLength: Int
+    get() {
+        return 1
+    }
+    set(value) {
+        filters = arrayOf<InputFilter>(LengthFilter(value))
     }
 
 inline var TextView.textRes: Int
