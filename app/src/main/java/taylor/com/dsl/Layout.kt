@@ -1049,8 +1049,8 @@ fun ViewGroup.LayoutParams.append(set: ConstraintLayout.LayoutParams.() -> Unit)
 
 
 fun String.toLayoutId(): Int {
-    var id = java.lang.String(this).bytes.sum()
-    if (id == 48) id = 0
+    var id = hashCode()
+    if (this == parent_id) id = 0
     return id
 }
 

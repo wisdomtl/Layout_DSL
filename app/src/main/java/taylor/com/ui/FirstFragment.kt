@@ -85,10 +85,6 @@ class FirstFragment : Fragment() {
                     gradientType = gradient_type_linear
                     orientation = gradient_left_right
                     gradient_colors = listOf("#ffff00", "#0000ff")
-                    padding_start = 10
-                    padding_end = 10
-                    padding_top = 5
-                    padding_bottom = 5
                     strokeAttr = Stroke(5, "#000000", 2f, 3f)
                     color_state_list = listOf(
                         intArrayOf(state_enable) to "#007EFF",
