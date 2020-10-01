@@ -20,9 +20,7 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
-import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.*
 import androidx.constraintlayout.helper.widget.Flow
 import androidx.constraintlayout.helper.widget.Layer
 import androidx.constraintlayout.widget.ConstraintHelper
@@ -31,6 +29,7 @@ import androidx.constraintlayout.widget.ConstraintProperties
 import androidx.constraintlayout.widget.Guideline
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MarginLayoutParamsCompat
+import androidx.core.view.ViewCompat
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
@@ -50,160 +49,692 @@ import kotlin.math.abs
  * which has a better performance than xml files and more readable than normal java and kotlin code
  */
 //<editor-fold desc="widget creation function">
+/**
+ * create [AppCompatTextView] instance within a [ViewGroup]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [AppCompatTextView] into [ViewGroup] automatically
+ * @param init set attributes for this view in this lambda
+ */
 inline fun ViewGroup.TextView(
     style: Int? = null,
     autoAdd: Boolean = true,
-    init: TextView.() -> Unit,
-) {
+    init: AppCompatTextView.() -> Unit,
+): TextView {
     val textView =
         if (style != null) AppCompatTextView(
             ContextThemeWrapper(context, style)
         ) else AppCompatTextView(context)
-    textView.apply(init).also { if (autoAdd) addView(it) }
+    return textView.apply(init).also { if (autoAdd) addView(it) }
 }
 
+/**
+ * create [AppCompatImageView] instance within a [ViewGroup]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [AppCompatImageView] into [ViewGroup] automatically
+ *  @param init set attributes for this view in this lambda
+ */
 inline fun ViewGroup.ImageView(
     style: Int? = null,
     autoAdd: Boolean = true,
-    init: ImageView.() -> Unit
-) {
+    init: AppCompatImageView.() -> Unit
+): ImageView {
     val imageView =
         if (style != null) AppCompatImageView(
             ContextThemeWrapper(context, style)
         ) else AppCompatImageView(context)
-    imageView.apply(init).also { if (autoAdd) addView(it) }
+    return imageView.apply(init).also { if (autoAdd) addView(it) }
 }
 
-inline fun ViewGroup.Button(style: Int? = null, autoAdd: Boolean = true, init: Button.() -> Unit) {
+/**
+ * create [AppCompatButton] instance within a [ViewGroup]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [AppCompatButton] into [ViewGroup] automatically
+ * @param init set attributes for this view in this lambda
+ */
+inline fun ViewGroup.Button(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: AppCompatButton.() -> Unit
+): Button {
     val button =
         if (style != null) AppCompatButton(
             ContextThemeWrapper(context, style)
         ) else AppCompatButton(context)
-    button.apply(init).also { if (autoAdd) addView(it) }
+    return button.apply(init).also { if (autoAdd) addView(it) }
 }
 
-inline fun ViewGroup.View(autoAdd: Boolean = true, init: View.() -> Unit): View =
-    View(context).apply(init).also { if (autoAdd) addView(it) }
+/**
+ * create [View] instance within a [ViewGroup]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [View] into [ViewGroup] automatically
+ * @param init set attributes for this view in this lambda
+ */
+inline fun ViewGroup.View(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: View.() -> Unit
+): View {
+    val view =
+        if (style != null) View(
+            ContextThemeWrapper(context, style)
+        ) else View(context)
+    return view.apply(init).also { if (autoAdd) addView(it) }
+}
 
-inline fun ViewGroup.RelativeLayout(autoAdd: Boolean = true, init: RelativeLayout.() -> Unit) =
-    RelativeLayout(context).apply(init).also { if (autoAdd) addView(it) }
+/**
+ * create [RelativeLayout] instance within a [ViewGroup]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [RelativeLayout] into [ViewGroup] automatically
+ * @param init set attributes for this view in this lambda
+ */
+inline fun ViewGroup.RelativeLayout(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: RelativeLayout.() -> Unit
+): RelativeLayout {
+    val relativeLayout =
+        if (style != null) RelativeLayout(
+            ContextThemeWrapper(context, style)
+        ) else RelativeLayout(context)
+    return relativeLayout.apply(init).also { if (autoAdd) addView(it) }
+}
 
-inline fun ViewGroup.LinearLayout(autoAdd: Boolean = true, init: LinearLayout.() -> Unit) =
-    LinearLayout(context).apply(init).also { if (autoAdd) addView(it) }
+/**
+ * create [LinearLayoutCompat] instance within a [ViewGroup]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [LinearLayoutCompat] into [ViewGroup] automatically
+ * @param init set attributes for this view in this lambda
+ */
+inline fun ViewGroup.LinearLayout(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: LinearLayoutCompat.() -> Unit
+): LinearLayoutCompat {
+    val linearLayout =
+        if (style != null) LinearLayoutCompat(
+            ContextThemeWrapper(context, style)
+        ) else LinearLayoutCompat(context)
+    return linearLayout.apply(init).also { if (autoAdd) addView(it) }
+}
 
-inline fun ViewGroup.NestedScrollView(autoAdd: Boolean = true, init: NestedScrollView.() -> Unit) =
-    NestedScrollView(context).apply(init).also { if (autoAdd) addView(it) }
+/**
+ * create [NestedScrollView] instance within a [ViewGroup]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [NestedScrollView] into [ViewGroup] automatically
+ * @param init set attributes for this view in this lambda
+ */
+inline fun ViewGroup.NestedScrollView(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: NestedScrollView.() -> Unit
+): NestedScrollView {
+    val nestedScrollView =
+        if (style != null) NestedScrollView(
+            ContextThemeWrapper(context, style)
+        ) else NestedScrollView(context)
+    return nestedScrollView.apply(init).also { if (autoAdd) addView(it) }
+}
 
-inline fun ViewGroup.RecyclerView(autoAdd: Boolean = true, init: RecyclerView.() -> Unit) =
-    RecyclerView(context).apply(init).also { if (autoAdd) addView(it) }
+/**
+ * create [RecyclerView] instance within a [ViewGroup]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [RecyclerView] into [ViewGroup] automatically
+ * @param init set attributes for this view in this lambda
+ */
+inline fun ViewGroup.RecyclerView(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: RecyclerView.() -> Unit
+): RecyclerView {
+    val recyclerView =
+        if (style != null) RecyclerView(
+            ContextThemeWrapper(context, style)
+        ) else RecyclerView(context)
+    return recyclerView.apply(init).also { if (autoAdd) addView(it) }
+}
 
-inline fun ViewGroup.ConstraintLayout(autoAdd: Boolean = true, init: ConstraintLayout.() -> Unit) =
-    ConstraintLayout(context).apply(init).also { if (autoAdd) addView(it) }
+/**
+ * create [ConstraintLayout] instance within a [ViewGroup]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [ConstraintLayout] into [ViewGroup] automatically
+ * @param init set attributes for this view in this lambda
+ */
+inline fun ViewGroup.ConstraintLayout(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: ConstraintLayout.() -> Unit
+): ConstraintLayout {
+    val constraintLayout =
+        if (style != null) ConstraintLayout(
+            ContextThemeWrapper(context, style)
+        ) else ConstraintLayout(context)
+    return constraintLayout.apply(init).also { if (autoAdd) addView(it) }
+}
 
-inline fun ViewGroup.FrameLayout(autoAdd: Boolean = true, init: FrameLayout.() -> Unit) =
-    FrameLayout(context).apply(init).also { if (autoAdd) addView(it) }
+/**
+ * create [FrameLayout] instance within a [ViewGroup]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [FrameLayout] into [ViewGroup] automatically
+ * @param init set attributes for this view in this lambda
+ */
+inline fun ViewGroup.FrameLayout(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: FrameLayout.() -> Unit
+): FrameLayout {
+    val frameLayout =
+        if (style != null) FrameLayout(
+            ContextThemeWrapper(context, style)
+        ) else FrameLayout(context)
+    return frameLayout.apply(init).also { if (autoAdd) addView(it) }
+}
 
-inline fun ViewGroup.ViewFlipper(autoAdd: Boolean = true, init: ViewFlipper.() -> Unit) =
-    ViewFlipper(context).apply(init).also { if (autoAdd) addView(it) }
+/**
+ * create [ViewFlipper] instance within a [ViewGroup]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [ViewFlipper] into [ViewGroup] automatically
+ * @param init set attributes for this view in this lambda
+ */
+inline fun ViewGroup.ViewFlipper(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: ViewFlipper.() -> Unit
+): ViewFlipper {
+    val viewFlipper =
+        if (style != null) ViewFlipper(
+            ContextThemeWrapper(context, style)
+        ) else ViewFlipper(context)
+    return viewFlipper.apply(init).also { if (autoAdd) addView(it) }
+}
 
-inline fun ViewGroup.EditText(autoAdd: Boolean = true, init: EditText.() -> Unit) =
-    EditText(context).apply(init).also { if (autoAdd) addView(it) }
+/**
+ * create [AppCompatEditText] instance within a [ViewGroup]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [AppCompatEditText] into [ViewGroup] automatically
+ * @param init set attributes for this view in this lambda
+ */
+inline fun ViewGroup.EditText(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: AppCompatEditText.() -> Unit
+): AppCompatEditText {
+    val editText =
+        if (style != null) AppCompatEditText(
+            ContextThemeWrapper(context, style)
+        ) else AppCompatEditText(context)
+    return editText.apply(init).also { if (autoAdd) addView(it) }
+}
 
+/**
+ * create [HorizontalScrollView] instance within a [ViewGroup]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [HorizontalScrollView] into [ViewGroup] automatically
+ * @param init set attributes for this view in this lambda
+ */
 inline fun ViewGroup.HorizontalScrollView(
+    style: Int? = null,
     autoAdd: Boolean = true,
     init: HorizontalScrollView.() -> Unit
-) =
-    HorizontalScrollView(context).apply(init).also { if (autoAdd) addView(it) }
+): HorizontalScrollView {
+    val horizontalScrollView =
+        if (style != null) HorizontalScrollView(
+            ContextThemeWrapper(context, style)
+        ) else HorizontalScrollView(context)
+    return horizontalScrollView.apply(init).also { if (autoAdd) addView(it) }
+}
 
-inline fun ViewGroup.ViewPager2(autoAdd: Boolean = true, init: ViewPager2.() -> Unit) =
-    ViewPager2(context).apply(init).also { if (autoAdd) addView(it) }
+/**
+ * create [ViewPager2] instance within a [ViewGroup]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [ViewPager2] into [ViewGroup] automatically
+ * @param init set attributes for this view in this lambda
+ */
+inline fun ViewGroup.ViewPager2(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: ViewPager2.() -> Unit
+): ViewPager2 {
+    val viewPager2 =
+        if (style != null) ViewPager2(
+            ContextThemeWrapper(context, style)
+        ) else ViewPager2(context)
+    return viewPager2.apply(init).also { if (autoAdd) addView(it) }
+}
 
-inline fun ConstraintLayout.Guideline(autoAdd: Boolean = true, init: Guideline.() -> Unit) =
-    Guideline(context).apply(init).also { if (autoAdd) addView(it) }
+/**
+ * create [Guideline] instance within a [ConstraintLayout]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [Guideline] into [ConstraintLayout] automatically
+ * @param init set attributes for this view in this lambda
+ */
+inline fun ConstraintLayout.Guideline(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: Guideline.() -> Unit
+): Guideline {
+    val guideline =
+        if (style != null) Guideline(
+            ContextThemeWrapper(context, style)
+        ) else Guideline(context)
+    return guideline.apply(init).also { if (autoAdd) addView(it) }
+}
 
-inline fun ConstraintLayout.Flow(autoAdd: Boolean = true, init: Flow.() -> Unit) =
-    Flow(context).apply(init).also { if (autoAdd) addView(it) }
+/**
+ * create [Flow] instance within a [ConstraintLayout]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [Flow] into [ConstraintLayout] automatically
+ * @param init set attributes for this view in this lambda
+ */
+inline fun ConstraintLayout.Flow(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: Flow.() -> Unit
+): Flow {
+    val flow =
+        if (style != null) Flow(
+            ContextThemeWrapper(context, style)
+        ) else Flow(context)
+    return flow.apply(init).also { if (autoAdd) addView(it) }
+}
 
-inline fun ConstraintLayout.Layer(autoAdd: Boolean = true, init: Layer.() -> Unit) =
-    Layer(context).apply(init).also { if (autoAdd) addView(it) }
+/**
+ * create [Layer] instance within a [ConstraintLayout]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [Layer] into [ConstraintLayout] automatically
+ * @param init set attributes for this view in this lambda
+ */
+inline fun ConstraintLayout.Layer(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: Layer.() -> Unit
+): Layer {
+    val layer =
+        if (style != null) Layer(
+            ContextThemeWrapper(context, style)
+        ) else Layer(context)
+    return layer.apply(init).also { if (autoAdd) addView(it) }
+}
 
-inline fun Context.ConstraintLayout(init: ConstraintLayout.() -> Unit): ConstraintLayout =
-    ConstraintLayout(this).apply(init)
+/**
+ * create [ConstraintLayout] instance
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Context.ConstraintLayout(
+    style: Int? = null,
+    init: ConstraintLayout.() -> Unit
+): ConstraintLayout {
+    val constraintLayout =
+        if (style != null) ConstraintLayout(
+            ContextThemeWrapper(this, style)
+        ) else ConstraintLayout(this)
+    return constraintLayout.apply(init)
+}
 
-inline fun Context.LinearLayout(init: LinearLayout.() -> Unit): LinearLayout =
-    LinearLayout(this).apply(init)
+/**
+ * create [LinearLayoutCompat] instance
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Context.LinearLayout(
+    style: Int? = null,
+    init: LinearLayoutCompat.() -> Unit
+): LinearLayoutCompat {
+    val linearLayoutCompat =
+        if (style != null) LinearLayoutCompat(
+            ContextThemeWrapper(this, style)
+        ) else LinearLayoutCompat(this)
+    return linearLayoutCompat.apply(init)
+}
 
-inline fun Context.FrameLayout(init: FrameLayout.() -> Unit) =
-    FrameLayout(this).apply(init)
+/**
+ * create [FrameLayout] instance
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Context.FrameLayout(style: Int? = null, init: FrameLayout.() -> Unit): FrameLayout {
+    val frameLayout =
+        if (style != null) FrameLayout(
+            ContextThemeWrapper(this, style)
+        ) else FrameLayout(this)
+    return frameLayout.apply(init)
+}
 
-inline fun Context.NestedScrollView(init: NestedScrollView.() -> Unit) =
-    NestedScrollView(this).apply(init)
+/**
+ * create [NestedScrollView] instance
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Context.NestedScrollView(
+    style: Int? = null,
+    init: NestedScrollView.() -> Unit
+): NestedScrollView {
+    val nestedScrollView =
+        if (style != null) NestedScrollView(
+            ContextThemeWrapper(this, style)
+        ) else NestedScrollView(this)
+    return nestedScrollView.apply(init)
+}
 
-inline fun Context.TextView(init: TextView.() -> Unit) =
-    TextView(this).apply(init)
+/**
+ * create [AppCompatTextView] instance
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Context.TextView(
+    style: Int? = null,
+    init: AppCompatTextView.() -> Unit
+): AppCompatTextView {
+    val textView =
+        if (style != null) AppCompatTextView(
+            ContextThemeWrapper(this, style)
+        ) else AppCompatTextView(this)
+    return textView.apply(init)
 
-inline fun Context.Button(init: Button.() -> Unit) =
-    Button(this).apply(init)
+}
 
-inline fun Context.ImageView(init: ImageView.() -> Unit) =
-    ImageView(this).apply(init)
+/**
+ * create [AppCompatButton] instance
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Context.Button(style: Int? = null, init: AppCompatButton.() -> Unit): AppCompatButton {
+    val button =
+        if (style != null) AppCompatButton(
+            ContextThemeWrapper(this, style)
+        ) else AppCompatButton(this)
+    return button.apply(init)
+}
 
-inline fun Context.View(init: View.() -> Unit) =
-    View(this).apply(init)
+/**
+ * create [AppCompatImageView] instance
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Context.ImageView(
+    style: Int? = null,
+    init: AppCompatImageView.() -> Unit
+): AppCompatImageView {
+    val imageView =
+        if (style != null) AppCompatImageView(
+            ContextThemeWrapper(this, style)
+        ) else AppCompatImageView(this)
+    return imageView.apply(init)
+}
 
-inline fun Context.EditText(init: EditText.() -> Unit) =
-    EditText(this).apply(init)
+/**
+ * create [View] instance
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Context.View(style: Int? = null, init: View.() -> Unit): View {
+    val view =
+        if (style != null) View(
+            ContextThemeWrapper(this, style)
+        ) else View(this)
+    return view.apply(init)
+}
 
-inline fun Context.ViewFlipper(init: ViewFlipper.() -> Unit) =
-    ViewFlipper(this).apply(init)
+/**
+ * create [AppCompatEditText] instance
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Context.EditText(
+    style: Int? = null,
+    init: AppCompatEditText.() -> Unit
+): AppCompatEditText {
+    val editText =
+        if (style != null) AppCompatEditText(
+            ContextThemeWrapper(this, style)
+        ) else AppCompatEditText(this)
+    return editText.apply(init)
+}
 
-inline fun Context.HorizontalScrollView(init: HorizontalScrollView.() -> Unit) =
-    HorizontalScrollView(this).apply(init)
+/**
+ * create [ViewFlipper] instance
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Context.ViewFlipper(style: Int? = null, init: ViewFlipper.() -> Unit): ViewFlipper {
+    val viewFlipper =
+        if (style != null) ViewFlipper(
+            ContextThemeWrapper(this, style)
+        ) else ViewFlipper(this)
+    return viewFlipper.apply(init)
 
-inline fun Context.ViewPager2(init: ViewPager2.() -> Unit) =
-    ViewPager2(this).apply(init)
+}
 
-inline fun Context.RecyclerView(init: RecyclerView.() -> Unit) =
-    RecyclerView(this).apply(init)
+/**
+ * create [HorizontalScrollView] instance
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Context.HorizontalScrollView(
+    style: Int? = null,
+    init: HorizontalScrollView.() -> Unit
+): HorizontalScrollView {
+    val horizontalScrollView =
+        if (style != null) HorizontalScrollView(
+            ContextThemeWrapper(this, style)
+        ) else HorizontalScrollView(this)
+    return horizontalScrollView.apply(init)
+}
 
-inline fun Fragment.ConstraintLayout(init: ConstraintLayout.() -> Unit) =
-    context?.let { ConstraintLayout(it).apply(init) }
+/**
+ * create [ViewPager2] instance
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Context.ViewPager2(
+    style: Int? = null,
+    init: ViewPager2.() -> Unit
+): ViewPager2 {
+    val viewPager2 =
+        if (style != null) ViewPager2(
+            ContextThemeWrapper(this, style)
+        ) else ViewPager2(this)
+    return viewPager2.apply(init)
+}
 
-inline fun Fragment.LinearLayout(init: LinearLayout.() -> Unit) =
-    context?.let { LinearLayout(it).apply(init) }
+/**
+ * create [ViewPager2] instance
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Context.RecyclerView(
+    style: Int? = null,
+    init: RecyclerView.() -> Unit
+): RecyclerView {
+    val recyclerView =
+        if (style != null) RecyclerView(
+            ContextThemeWrapper(this, style)
+        ) else RecyclerView(this)
+    return recyclerView.apply(init)
+}
 
-inline fun Fragment.FrameLayout(init: FrameLayout.() -> Unit) =
-    context?.let { FrameLayout(it).apply(init) }
+/**
+ * create [ConstraintLayout] instance within [Fragment]
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Fragment.ConstraintLayout(
+    style: Int? = null,
+    init: ConstraintLayout.() -> Unit
+): ConstraintLayout? = context?.let {
+    if (style != null) ConstraintLayout(
+        ContextThemeWrapper(it, style)
+    ) else ConstraintLayout(it)
+}?.apply(init)
 
-inline fun Fragment.NestedScrollView(init: NestedScrollView.() -> Unit) =
-    context?.let { NestedScrollView(it).apply(init) }
+/**
+ * create [LinearLayoutCompat] instance within [Fragment]
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Fragment.LinearLayout(
+    style: Int? = null,
+    init: LinearLayoutCompat.() -> Unit
+): LinearLayoutCompat? = context?.let {
+    if (style != null) LinearLayoutCompat(
+        ContextThemeWrapper(it, style)
+    ) else LinearLayoutCompat(it)
+}?.apply(init)
 
-inline fun Fragment.TextView(init: TextView.() -> Unit) =
-    context?.let { TextView(it).apply(init) }
+/**
+ * create [FrameLayout] instance within [Fragment]
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Fragment.FrameLayout(
+    style: Int? = null,
+    init: FrameLayout.() -> Unit
+): FrameLayout? = context?.let {
+    if (style != null) FrameLayout(
+        ContextThemeWrapper(it, style)
+    ) else FrameLayout(it)
+}?.apply(init)
 
-inline fun Fragment.Button(init: Button.() -> Unit) =
-    context?.let { Button(it).apply(init) }
+/**
+ * create [NestedScrollView] instance within [Fragment]
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Fragment.NestedScrollView(
+    style: Int? = null,
+    init: FrameLayout.() -> Unit
+): NestedScrollView? = context?.let {
+    if (style != null) NestedScrollView(
+        ContextThemeWrapper(it, style)
+    ) else NestedScrollView(it)
+}?.apply(init)
 
-inline fun Fragment.ImageView(init: ImageView.() -> Unit) =
-    context?.let { ImageView(it).apply(init) }
+/**
+ * create [AppCompatTextView] instance within [Fragment]
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Fragment.TextView(
+    style: Int? = null,
+    init: AppCompatTextView.() -> Unit
+): AppCompatTextView? = context?.let {
+    if (style != null) AppCompatTextView(
+        ContextThemeWrapper(it, style)
+    ) else AppCompatTextView(it)
+}?.apply(init)
 
-inline fun Fragment.View(init: View.() -> Unit) =
-    context?.let { View(it).apply(init) }
+/**
+ * create [AppCompatButton] instance within [Fragment]
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Fragment.Button(
+    style: Int? = null,
+    init:AppCompatButton.() -> Unit
+): AppCompatButton? = context?.let {
+    if (style != null) AppCompatButton(
+        ContextThemeWrapper(it, style)
+    ) else AppCompatButton(it)
+}?.apply(init)
 
-inline fun Fragment.ViewFlipper(init: ViewFlipper.() -> Unit) =
-    context?.let { ViewFlipper(it).apply(init) }
+/**
+ * create [AppCompatImageView] instance within [Fragment]
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Fragment.ImageView(
+    style: Int? = null,
+    init:AppCompatImageView.() -> Unit
+): AppCompatImageView? = context?.let {
+    if (style != null) AppCompatImageView(
+        ContextThemeWrapper(it, style)
+    ) else AppCompatImageView(it)
+}?.apply(init)
 
-inline fun Fragment.EditText(init: EditText.() -> Unit) =
-    context?.let { EditText(it).apply(init) }
+/**
+ * create [View] instance within [Fragment]
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Fragment.View(
+    style: Int? = null,
+    init:View.() -> Unit
+): View? = context?.let {
+    if (style != null) View(
+        ContextThemeWrapper(it, style)
+    ) else View(it)
+}?.apply(init)
 
-inline fun Fragment.HorizontalScrollView(init: HorizontalScrollView.() -> Unit) =
-    context?.let { HorizontalScrollView(it).apply(init) }
+/**
+ * create [ViewFlipper] instance within [Fragment]
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Fragment.ViewFlipper(
+    style: Int? = null,
+    init:ViewFlipper.() -> Unit
+): ViewFlipper? = context?.let {
+    if (style != null) ViewFlipper(
+        ContextThemeWrapper(it, style)
+    ) else ViewFlipper(it)
+}?.apply(init)
 
-inline fun Fragment.ViewPager2(init: ViewPager2.() -> Unit) =
-    context?.let { ViewPager2(it).apply(init) }
+/**
+ * create [AppCompatEditText] instance within [Fragment]
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Fragment.EditText(
+    style: Int? = null,
+    init:AppCompatEditText.() -> Unit
+): AppCompatEditText? = context?.let {
+    if (style != null) AppCompatEditText(
+        ContextThemeWrapper(it, style)
+    ) else AppCompatEditText(it)
+}?.apply(init)
 
-inline fun Fragment.RecyclerView(init: RecyclerView.() -> Unit) =
-    context?.let { RecyclerView(it).apply(init) }
+/**
+ * create [HorizontalScrollView] instance within [Fragment]
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Fragment.HorizontalScrollView(
+    style: Int? = null,
+    init:HorizontalScrollView.() -> Unit
+): HorizontalScrollView? = context?.let {
+    if (style != null) HorizontalScrollView(
+        ContextThemeWrapper(it, style)
+    ) else HorizontalScrollView(it)
+}?.apply(init)
+
+/**
+ * create [ViewPager2] instance within [Fragment]
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Fragment.ViewPager2(
+    style: Int? = null,
+    init:ViewPager2.() -> Unit
+): ViewPager2? = context?.let {
+    if (style != null) ViewPager2(
+        ContextThemeWrapper(it, style)
+    ) else ViewPager2(it)
+}?.apply(init)
+
+/**
+ * create [ViewPager2] instance within [Fragment]
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Fragment.RecyclerView(
+    style: Int? = null,
+    init:RecyclerView.() -> Unit
+): RecyclerView? = context?.let {
+    if (style != null) RecyclerView(
+        ContextThemeWrapper(it, style)
+    ) else RecyclerView(it)
+}?.apply(init)
+
 //</editor-fold>
 
 //<editor-fold desc="View extend field">
