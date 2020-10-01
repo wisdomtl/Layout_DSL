@@ -1,6 +1,7 @@
 package taylor.com.dsl
 
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Color
@@ -18,6 +19,10 @@ import android.view.*
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ContextThemeWrapper
+import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.helper.widget.Flow
 import androidx.constraintlayout.helper.widget.Layer
 import androidx.constraintlayout.widget.ConstraintHelper
@@ -45,14 +50,37 @@ import kotlin.math.abs
  * which has a better performance than xml files and more readable than normal java and kotlin code
  */
 //<editor-fold desc="widget creation function">
-inline fun ViewGroup.TextView(autoAdd: Boolean = true, init: TextView.() -> Unit) =
-    TextView(context).apply(init).also { if (autoAdd) addView(it) }
+inline fun ViewGroup.TextView(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: TextView.() -> Unit,
+) {
+    val textView =
+        if (style != null) AppCompatTextView(
+            ContextThemeWrapper(context, style)
+        ) else AppCompatTextView(context)
+    textView.apply(init).also { if (autoAdd) addView(it) }
+}
 
-inline fun ViewGroup.ImageView(autoAdd: Boolean = true, init: ImageView.() -> Unit) =
-    ImageView(context).apply(init).also { if (autoAdd) addView(it) }
+inline fun ViewGroup.ImageView(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: ImageView.() -> Unit
+) {
+    val imageView =
+        if (style != null) AppCompatImageView(
+            ContextThemeWrapper(context, style)
+        ) else AppCompatImageView(context)
+    imageView.apply(init).also { if (autoAdd) addView(it) }
+}
 
-inline fun ViewGroup.Button(autoAdd: Boolean = true, init: Button.() -> Unit) =
-    Button(context).apply(init).also { if (autoAdd) addView(it) }
+inline fun ViewGroup.Button(style: Int? = null, autoAdd: Boolean = true, init: Button.() -> Unit) {
+    val button =
+        if (style != null) AppCompatButton(
+            ContextThemeWrapper(context, style)
+        ) else AppCompatButton(context)
+    button.apply(init).also { if (autoAdd) addView(it) }
+}
 
 inline fun ViewGroup.View(autoAdd: Boolean = true, init: View.() -> Unit): View =
     View(context).apply(init).also { if (autoAdd) addView(it) }

@@ -66,11 +66,10 @@ class FirstFragment : Fragment() {
                 onClick = onBackClick
             }
 
-            TextView {
+            TextView (R.style.myTextView){
                 layout_width = wrap_content
                 layout_height = wrap_content
                 text = "commit"
-                textSize = 30f
                 gravity = gravity_center
                 textStyle = bold
                 align_vertical_to = "ivBack"
