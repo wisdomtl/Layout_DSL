@@ -37,11 +37,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.launch
-import taylor.com.coroutine.autoDispose
 import kotlin.math.abs
 
 /**
@@ -58,7 +59,7 @@ import kotlin.math.abs
 inline fun ViewGroup.TextView(
     style: Int? = null,
     autoAdd: Boolean = true,
-    init: AppCompatTextView.() -> Unit,
+    init: AppCompatTextView.() -> Unit
 ): TextView {
     val textView =
         if (style != null) AppCompatTextView(
@@ -1747,6 +1748,51 @@ fun View.setShakelessClickListener(threshold: Long, onClick: (View) -> Unit) {
         }.autoDispose(this)
     }
 }
+
+
+/**
+ * avoid memory leak for View and activity when activity has finished while coroutine is still running
+ */
+fun Job.autoDispose(view: View): Job {
+    val isAttached = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && view.isAttachedToWindow || view.windowToken != null
+
+    val listener = object : View.OnAttachStateChangeListener {
+        override fun onViewDetachedFromWindow(v: View?) {
+            cancel()
+            v?.removeOnAttachStateChangeListener(this)
+        }
+
+        override fun onViewAttachedToWindow(v: View?) = Unit
+    }
+
+    view.addOnAttachStateChangeListener(listener)
+    invokeOnCompletion {
+        view.removeOnAttachStateChangeListener(listener)
+    }
+    return this
+}
+
+/**
+ * avoid memory leak
+ */
+fun <T> SendChannel<T>.autoDispose(view: View): SendChannel<T> {
+    val isAttached = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && view.isAttachedToWindow || view.windowToken != null
+    val listener = object : View.OnAttachStateChangeListener {
+        override fun onViewDetachedFromWindow(v: View?) {
+            close()
+            v?.removeOnAttachStateChangeListener(this)
+        }
+
+        override fun onViewAttachedToWindow(v: View?) = Unit
+    }
+
+    view.addOnAttachStateChangeListener(listener)
+    invokeOnClose {
+        view.removeOnAttachStateChangeListener(listener)
+    }
+    return this
+}
+
 
 /**
  * get the relative rect of the [Rect] according to the [otherRect] ,considering the [otherRect]'s left and top is zero
