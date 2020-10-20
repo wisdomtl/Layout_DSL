@@ -139,7 +139,7 @@ inline fun ViewGroup.RelativeLayout(
 }
 
 /**
- * create [LinearLayoutCompat] instance within a [ViewGroup]
+ * create [LinearLayout] instance within a [ViewGroup]
  * @param style an style int value defined in xml
  * @param autoAdd whether add [LinearLayoutCompat] into [ViewGroup] automatically
  * @param init set attributes for this view in this lambda
@@ -371,19 +371,19 @@ inline fun Context.ConstraintLayout(
 }
 
 /**
- * create [LinearLayoutCompat] instance
+ * create [LinearLayout] instance
  * @param style an style int value defined in xml
  * @param init set attributes for this view in this lambda
  */
 inline fun Context.LinearLayout(
     style: Int? = null,
-    init: LinearLayoutCompat.() -> Unit
-): LinearLayoutCompat {
-    val linearLayoutCompat =
-        if (style != null) LinearLayoutCompat(
+    init: LinearLayout.() -> Unit
+): LinearLayout {
+    val LinearLayout =
+        if (style != null) LinearLayout(
             ContextThemeWrapper(this, style)
-        ) else LinearLayoutCompat(this)
-    return linearLayoutCompat.apply(init)
+        ) else LinearLayout(this)
+    return LinearLayout.apply(init)
 }
 
 /**
@@ -567,17 +567,17 @@ inline fun Fragment.ConstraintLayout(
 }?.apply(init)
 
 /**
- * create [LinearLayoutCompat] instance within [Fragment]
+ * create [LinearLayout] instance within [Fragment]
  * @param style an style int value defined in xml
  * @param init set attributes for this view in this lambda
  */
 inline fun Fragment.LinearLayout(
     style: Int? = null,
-    init: LinearLayoutCompat.() -> Unit
-): LinearLayoutCompat? = context?.let {
-    if (style != null) LinearLayoutCompat(
+    init: LinearLayout.() -> Unit
+): LinearLayout? = context?.let {
+    if (style != null) LinearLayout(
         ContextThemeWrapper(it, style)
-    ) else LinearLayoutCompat(it)
+    ) else LinearLayout(it)
 }?.apply(init)
 
 /**
