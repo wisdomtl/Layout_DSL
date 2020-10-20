@@ -1,7 +1,6 @@
 package taylor.com.dsl
 
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Color
@@ -29,7 +28,6 @@ import androidx.constraintlayout.widget.ConstraintProperties
 import androidx.constraintlayout.widget.Guideline
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MarginLayoutParamsCompat
-import androidx.core.view.ViewCompat
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
@@ -149,12 +147,12 @@ inline fun ViewGroup.RelativeLayout(
 inline fun ViewGroup.LinearLayout(
     style: Int? = null,
     autoAdd: Boolean = true,
-    init: LinearLayoutCompat.() -> Unit
-): LinearLayoutCompat {
+    init: LinearLayout.() -> Unit
+): LinearLayout {
     val linearLayout =
-        if (style != null) LinearLayoutCompat(
+        if (style != null) LinearLayout(
             ContextThemeWrapper(context, style)
-        ) else LinearLayoutCompat(context)
+        ) else LinearLayout(context)
     return linearLayout.apply(init).also { if (autoAdd) addView(it) }
 }
 
