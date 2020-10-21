@@ -629,7 +629,7 @@ inline fun Fragment.TextView(
  */
 inline fun Fragment.Button(
     style: Int? = null,
-    init:AppCompatButton.() -> Unit
+    init: AppCompatButton.() -> Unit
 ): AppCompatButton? = context?.let {
     if (style != null) AppCompatButton(
         ContextThemeWrapper(it, style)
@@ -643,7 +643,7 @@ inline fun Fragment.Button(
  */
 inline fun Fragment.ImageView(
     style: Int? = null,
-    init:AppCompatImageView.() -> Unit
+    init: AppCompatImageView.() -> Unit
 ): AppCompatImageView? = context?.let {
     if (style != null) AppCompatImageView(
         ContextThemeWrapper(it, style)
@@ -657,7 +657,7 @@ inline fun Fragment.ImageView(
  */
 inline fun Fragment.View(
     style: Int? = null,
-    init:View.() -> Unit
+    init: View.() -> Unit
 ): View? = context?.let {
     if (style != null) View(
         ContextThemeWrapper(it, style)
@@ -671,7 +671,7 @@ inline fun Fragment.View(
  */
 inline fun Fragment.ViewFlipper(
     style: Int? = null,
-    init:ViewFlipper.() -> Unit
+    init: ViewFlipper.() -> Unit
 ): ViewFlipper? = context?.let {
     if (style != null) ViewFlipper(
         ContextThemeWrapper(it, style)
@@ -685,7 +685,7 @@ inline fun Fragment.ViewFlipper(
  */
 inline fun Fragment.EditText(
     style: Int? = null,
-    init:AppCompatEditText.() -> Unit
+    init: AppCompatEditText.() -> Unit
 ): AppCompatEditText? = context?.let {
     if (style != null) AppCompatEditText(
         ContextThemeWrapper(it, style)
@@ -699,7 +699,7 @@ inline fun Fragment.EditText(
  */
 inline fun Fragment.HorizontalScrollView(
     style: Int? = null,
-    init:HorizontalScrollView.() -> Unit
+    init: HorizontalScrollView.() -> Unit
 ): HorizontalScrollView? = context?.let {
     if (style != null) HorizontalScrollView(
         ContextThemeWrapper(it, style)
@@ -713,7 +713,7 @@ inline fun Fragment.HorizontalScrollView(
  */
 inline fun Fragment.ViewPager2(
     style: Int? = null,
-    init:ViewPager2.() -> Unit
+    init: ViewPager2.() -> Unit
 ): ViewPager2? = context?.let {
     if (style != null) ViewPager2(
         ContextThemeWrapper(it, style)
@@ -727,7 +727,7 @@ inline fun Fragment.ViewPager2(
  */
 inline fun Fragment.RecyclerView(
     style: Int? = null,
-    init:RecyclerView.() -> Unit
+    init: RecyclerView.() -> Unit
 ): RecyclerView? = context?.let {
     if (style != null) RecyclerView(
         ContextThemeWrapper(it, style)
@@ -789,7 +789,14 @@ inline var View.layout_width: Int
     set(value) {
         val w = if (value > 0) value.dp else value
         val h = layoutParams?.height ?: 0
-        layoutParams = ViewGroup.MarginLayoutParams(w, h)
+        layoutParams = if (layoutParams == null) {
+            ViewGroup.MarginLayoutParams(w, h)
+        } else {
+            layoutParams.append {
+                width = w
+                height = h
+            }
+        }
     }
 
 inline var View.layout_height: Int
@@ -800,7 +807,14 @@ inline var View.layout_height: Int
 
         val w = layoutParams?.width ?: 0
         val h = if (value > 0) value.dp else value
-        layoutParams = ViewGroup.MarginLayoutParams(w, h)
+        layoutParams = if (layoutParams == null) {
+            ViewGroup.MarginLayoutParams(w, h)
+        } else {
+            layoutParams.append {
+                width = w
+                height = h
+            }
+        }
     }
 
 inline var View.alignParentStart: Boolean
@@ -1752,7 +1766,8 @@ fun View.setShakelessClickListener(threshold: Long, onClick: (View) -> Unit) {
  * avoid memory leak for View and activity when activity has finished while coroutine is still running
  */
 fun Job.autoDispose(view: View): Job {
-    val isAttached = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && view.isAttachedToWindow || view.windowToken != null
+    val isAttached =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && view.isAttachedToWindow || view.windowToken != null
 
     val listener = object : View.OnAttachStateChangeListener {
         override fun onViewDetachedFromWindow(v: View?) {
@@ -1774,7 +1789,8 @@ fun Job.autoDispose(view: View): Job {
  * avoid memory leak
  */
 fun <T> SendChannel<T>.autoDispose(view: View): SendChannel<T> {
-    val isAttached = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && view.isAttachedToWindow || view.windowToken != null
+    val isAttached =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && view.isAttachedToWindow || view.windowToken != null
     val listener = object : View.OnAttachStateChangeListener {
         override fun onViewDetachedFromWindow(v: View?) {
             close()
