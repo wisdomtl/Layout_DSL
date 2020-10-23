@@ -13,6 +13,7 @@ import android.os.Build
 import android.text.Editable
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
+import android.text.InputType
 import android.util.TypedValue
 import android.view.*
 import android.widget.*
@@ -1584,6 +1585,8 @@ val state_focused = android.R.attr.state_focused
 val state_unfocused = -android.R.attr.state_focused
 val state_selected = android.R.attr.state_selected
 val state_unselected = -android.R.attr.state_selected
+
+val input_type_number = InputType.TYPE_CLASS_NUMBER
 
 val parent_id = "0"
 //</editor-fold>
