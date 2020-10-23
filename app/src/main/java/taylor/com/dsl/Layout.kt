@@ -1475,6 +1475,15 @@ inline var Flow.flow_wrapMode: Int
         setWrapMode(value)
     }
 
+inline var Flow.reference_ids: List<String>
+    get() {
+        return emptyList()
+    }
+    set(value) {
+        referencedIds = value.map { it.toLayoutId() }.toIntArray()
+    }
+
+
 var View.onClick: (View) -> Unit
     get() {
         return {}
@@ -1587,6 +1596,10 @@ val state_selected = android.R.attr.state_selected
 val state_unselected = -android.R.attr.state_selected
 
 val input_type_number = InputType.TYPE_CLASS_NUMBER
+
+val wrap_mode_chain = Flow.WRAP_CHAIN
+val wrap_mode_none = Flow.WRAP_NONE
+val wrap_mode_aligned = Flow.WRAP_ALIGNED
 
 val parent_id = "0"
 //</editor-fold>
