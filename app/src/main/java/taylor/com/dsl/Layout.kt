@@ -14,6 +14,7 @@ import android.text.Editable
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
 import android.text.InputType
+import android.text.TextUtils
 import android.util.TypedValue
 import android.view.*
 import android.widget.*
@@ -1600,6 +1601,11 @@ val input_type_number = InputType.TYPE_CLASS_NUMBER
 val wrap_mode_chain = Flow.WRAP_CHAIN
 val wrap_mode_none = Flow.WRAP_NONE
 val wrap_mode_aligned = Flow.WRAP_ALIGNED
+
+val ellipsize_end = TextUtils.TruncateAt.END
+val ellipsize_marquee = TextUtils.TruncateAt.MARQUEE
+val ellipsize_middle = TextUtils.TruncateAt.MIDDLE
+val ellipsize_start = TextUtils.TruncateAt.START
 
 val parent_id = "0"
 //</editor-fold>
