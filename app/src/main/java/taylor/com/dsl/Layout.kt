@@ -1645,7 +1645,7 @@ fun ViewGroup.LayoutParams.append(set: ConstraintLayout.LayoutParams.() -> Unit)
 fun String.toLayoutId(): Int {
     var id = hashCode()
     if (this == parent_id) id = 0
-    return id
+    return abs(id)
 }
 
 fun <T : View> View.find(id: String): T? = findViewById(id.toLayoutId())
