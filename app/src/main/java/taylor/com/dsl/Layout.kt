@@ -1663,7 +1663,9 @@ fun ConstraintLayout.buildChain(
     startView: View,
     views: List<View>,
     endView: View,
-    orientation: Int
+    orientation: Int,
+    outMargin:Int,
+    innerMargin:Int
 ) {
     if (views.isNullOrEmpty()) return
     var preView = startView
@@ -1680,7 +1682,7 @@ fun ConstraintLayout.buildChain(
             startSide,
             if (isStartViewParent) ConstraintProperties.PARENT_ID else preView.id,
             if (isStartViewParent) startSide else endSide,
-            0
+            outMargin
         )
         .apply()
 
@@ -1688,10 +1690,10 @@ fun ConstraintLayout.buildChain(
 
     (1 until views.size).map { views[it] }.forEach { currentView ->
         ConstraintProperties(currentView)
-            .connect(startSide, preView.id, endSide, 0)
+            .connect(startSide, preView.id, endSide, innerMargin)
             .apply()
         ConstraintProperties(preView)
-            .connect(endSide, currentView.id, startSide, 0)
+            .connect(endSide, currentView.id, startSide, innerMargin)
             .apply()
         preView = currentView
     }
@@ -1702,7 +1704,7 @@ fun ConstraintLayout.buildChain(
             endSide,
             if (isEndViewParent) ConstraintProperties.PARENT_ID else endView.id,
             if (isEndViewParent) endSide else startSide,
-            0
+            outMargin
         )
         .apply()
 }
