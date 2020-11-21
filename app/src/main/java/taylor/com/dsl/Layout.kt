@@ -1659,34 +1659,55 @@ fun <T : View> AppCompatActivity.find(id: String): T? = findViewById(id.toLayout
  * [views] is the body of the chain
  * [orientation] could be [horizontal] or [vertical]
  */
-fun ConstraintLayout.buildChanin(
+fun ConstraintLayout.buildChain(
     startView: View,
     views: List<View>,
     endView: View,
     orientation: Int
 ) {
+    if (views.isNullOrEmpty()) return
     var preView = startView
     var startSide = if (orientation == horizontal) constraint_start else constraint_top
     var endSide = if (orientation == horizontal) constraint_end else constraint_bottom
-    views.forEach { currentView ->
-        if (preView == startView) {
-            ConstraintProperties(currentView)
-                .connect(startSide, preView.id, if (startView == endView) startSide else endSide, 0)
-                .apply()
-        } else {
-            ConstraintProperties(currentView)
-                .connect(startSide, preView.id, endSide, 0)
-                .apply()
-            ConstraintProperties(preView)
-                .connect(endSide, currentView.id, startSide, 0)
-                .apply()
-        }
+
+    val firstView = views.first()
+    val isStartViewParent = firstView.isChildOf(startView)
+    val isEndViewParent = firstView.isChildOf(endView)
+
+    // deal with the first view
+    ConstraintProperties(firstView)
+        .connect(
+            startSide,
+            if (isStartViewParent) ConstraintProperties.PARENT_ID else preView.id,
+            if (isStartViewParent) startSide else endSide,
+            0
+        )
+        .apply()
+
+    preView = firstView
+
+    (1 until views.size).map { views[it] }.forEach { currentView ->
+        ConstraintProperties(currentView)
+            .connect(startSide, preView.id, endSide, 0)
+            .apply()
+        ConstraintProperties(preView)
+            .connect(endSide, currentView.id, startSide, 0)
+            .apply()
         preView = currentView
     }
+
+    // deal with the last view
     ConstraintProperties(preView)
-        .connect(endSide, endView.id, if (startView == endView) endSide else startSide, 0)
+        .connect(
+            endSide,
+            if (isEndViewParent) ConstraintProperties.PARENT_ID else endView.id,
+            if (isEndViewParent) endSide else startSide,
+            0
+        )
         .apply()
 }
+
+fun View.isChildOf(view: View) = view.findViewById<View>(this.id) != null
 
 
 fun <T> View.observe(liveData: LiveData<T>?, action: (T) -> Unit) {
