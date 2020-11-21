@@ -1652,6 +1652,43 @@ fun <T : View> View.find(id: String): T? = findViewById(id.toLayoutId())
 
 fun <T : View> AppCompatActivity.find(id: String): T? = findViewById(id.toLayoutId())
 
+/**
+ * build a horizontal or vertical chain in [ConstraintLayout]
+ * [startView] is the starting point of the chain
+ * [endView] is the endding point of the chain
+ * [views] is the body of the chain
+ * [orientation] could be [horizontal] or [vertical]
+ */
+fun ConstraintLayout.buildChanin(
+    startView: View,
+    views: List<View>,
+    endView: View,
+    orientation: Int
+) {
+    var preView = startView
+    var startSide = if (orientation == horizontal) constraint_start else constraint_top
+    var endSide = if (orientation == horizontal) constraint_end else constraint_bottom
+    views.forEach { currentView ->
+        if (preView == startView) {
+            ConstraintProperties(currentView)
+                .connect(startSide, preView.id, if (startView == endView) startSide else endSide, 0)
+                .apply()
+        } else {
+            ConstraintProperties(currentView)
+                .connect(startSide, preView.id, endSide, 0)
+                .apply()
+            ConstraintProperties(preView)
+                .connect(endSide, currentView.id, startSide, 0)
+                .apply()
+        }
+        preView = currentView
+    }
+    ConstraintProperties(preView)
+        .connect(endSide, endView.id, if (startView == endView) endSide else startSide, 0)
+        .apply()
+}
+
+
 fun <T> View.observe(liveData: LiveData<T>?, action: (T) -> Unit) {
     (context as? LifecycleOwner)?.let { owner ->
         liveData?.observe(owner, Observer { action(it) })
