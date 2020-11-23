@@ -1427,6 +1427,19 @@ inline var TextView.onTextChange: TextWatcher
         addTextChangedListener(textWatcher)
     }
 
+inline var TextView.onEditorAction: EditorActionListener
+    get() {
+        return EditorActionListener()
+    }
+    set(value) {
+        val editorActionListener = object : TextView.OnEditorActionListener {
+            override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+                return value.onEditorAction(v, actionId, event)
+            }
+        }
+        setOnEditorActionListener(editorActionListener)
+    }
+
 inline var Button.textAllCaps: Boolean
     get() {
         return false
@@ -1664,8 +1677,8 @@ fun ConstraintLayout.buildChain(
     views: List<View>,
     endView: View,
     orientation: Int,
-    outMargin:Int,
-    innerMargin:Int
+    outMargin: Int,
+    innerMargin: Int
 ) {
     if (views.isNullOrEmpty()) return
     var preView = startView
@@ -1921,6 +1934,17 @@ class TextWatcher(
 )
 
 fun textWatcher(init: TextWatcher.() -> Unit): TextWatcher = TextWatcher().apply(init)
+
+class EditorActionListener(
+    var onEditorAction: (
+        textView: TextView?,
+        actionId: Int,
+        keyEvent: KeyEvent?
+    ) -> Boolean = { _, _, _ -> false }
+)
+
+fun editorAction(init: EditorActionListener.() -> Unit): EditorActionListener =
+    EditorActionListener().apply(init)
 
 /**
  * helper class for data binding
