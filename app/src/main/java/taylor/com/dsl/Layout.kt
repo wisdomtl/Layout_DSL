@@ -1524,6 +1524,14 @@ var RecyclerView.onItemClick: (View, Int, Float, Float) -> Unit
         setOnItemClickListener(value)
     }
 
+var RecyclerView.onItemLongClick: (View, Int, Float, Float) -> Unit
+    get() {
+        return { _, _, _, _ -> }
+    }
+    set(value) {
+        setOnItemLongClickListener(value)
+    }
+
 var RecyclerView.hasFixedSize: Boolean
     get() {
         return false
@@ -1730,6 +1738,65 @@ fun <T> View.observe(liveData: LiveData<T>?, action: (T) -> Unit) {
     (context as? LifecycleOwner)?.let { owner ->
         liveData?.observe(owner, Observer { action(it) })
     }
+}
+fun RecyclerView.setOnItemLongClickListener(listener: (View, Int, Float, Float) -> Unit) {
+    addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+        val gestureDetector = GestureDetector(context, object : GestureDetector.OnGestureListener {
+            override fun onShowPress(e: MotionEvent?) {
+            }
+
+            override fun onSingleTapUp(e: MotionEvent?): Boolean {
+                return false
+            }
+
+            override fun onDown(e: MotionEvent?): Boolean {
+                return false
+            }
+
+            override fun onFling(
+                e1: MotionEvent?,
+                e2: MotionEvent?,
+                velocityX: Float,
+                velocityY: Float
+            ): Boolean {
+                return false
+            }
+
+            override fun onScroll(
+                e1: MotionEvent?,
+                e2: MotionEvent?,
+                distanceX: Float,
+                distanceY: Float
+            ): Boolean {
+                return false
+            }
+
+            override fun onLongPress(e: MotionEvent?) {
+                e?.let {
+                    findChildViewUnder(it.x, it.y)?.let { child ->
+                        listener(
+                            child,
+                            getChildAdapterPosition(child),
+                            it.x - child.left,
+                            it.y - child.top
+                        )
+                    }
+                }
+            }
+        })
+
+        override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
+
+        }
+
+        override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+            gestureDetector.onTouchEvent(e)
+            return false
+        }
+
+        override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+        }
+    })
 }
 
 fun RecyclerView.setOnItemClickListener(listener: (View, Int, Float, Float) -> Unit) {

@@ -18,9 +18,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.SimpleTarget
+import taylor.com.adapter.MyAdapter
 import taylor.com.bean.User
 import taylor.com.dsl.*
-import taylor.com.adapter.MyAdapter
 
 /**
  * show how to use layout dsl in [Fragment]
@@ -66,7 +66,7 @@ class FirstFragment : Fragment() {
                 onClick = onBackClick
             }
 
-            TextView (R.style.myTextView){
+            TextView(R.style.myTextView) {
                 layout_width = wrap_content
                 layout_height = wrap_content
                 text = "commit"
@@ -282,6 +282,7 @@ class FirstFragment : Fragment() {
                 top_toBottomOf = "tvTime"
                 onItemClick = onListItemClick
                 margin_top = 10
+                onItemLongClick = onItemLongClickListener
             }
 
             EditText {
@@ -301,6 +302,13 @@ class FirstFragment : Fragment() {
 
     private val onCancelClick = { v: View ->
         nameLiveData.value = "new title"
+        Unit
+    }
+
+    private val onItemLongClickListener = { v: View, i: Int, x: Float, y: Float ->
+        adapter.myBean?.get(i)?.let {
+            Log.v("ttaylor","on item(${it.name}) long click  ")
+        }
         Unit
     }
 
