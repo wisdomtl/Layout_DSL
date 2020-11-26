@@ -1677,7 +1677,8 @@ fun ConstraintLayout.buildChain(
     views: List<View>,
     endView: View,
     orientation: Int,
-    outMargin: Int,
+    outMarginStart: Int,
+    outMarinEnd:Int,
     innerMargin: Int
 ) {
     if (views.isNullOrEmpty()) return
@@ -1695,7 +1696,7 @@ fun ConstraintLayout.buildChain(
             startSide,
             if (isStartViewParent) ConstraintProperties.PARENT_ID else preView.id,
             if (isStartViewParent) startSide else endSide,
-            outMargin
+            outMarginStart
         )
         .apply()
 
@@ -1717,7 +1718,7 @@ fun ConstraintLayout.buildChain(
             endSide,
             if (isEndViewParent) ConstraintProperties.PARENT_ID else endView.id,
             if (isEndViewParent) endSide else startSide,
-            outMargin
+            outMarinEnd
         )
         .apply()
 }
