@@ -1894,6 +1894,31 @@ inline fun View.onChildViewClick(
 }
 
 /**
+ *  listen click action for the child view of [RecyclerView]'s item
+ */
+inline fun View.onChildViewClick(
+    vararg layoutId: Int, // the id of the child view of RecyclerView's item
+    x: Float, // the x coordinate of click point
+    y: Float,// the y coordinate of click point,
+    clickAction: ((View?) -> Unit)
+) {
+    var clickedView: View? = null
+    layoutId
+        .map { id ->
+            findViewById<View>(id)?.let { view ->
+                view.getRelativeRectTo(this).also { rect ->
+                    if (rect.contains(x.toInt(), y.toInt())) {
+                        clickedView = view
+                    }
+                }
+            } ?: Rect()
+        }
+        .fold(Rect()) { init, rect -> init.apply { union(rect) } }
+        .takeIf { it.contains(x.toInt(), y.toInt()) }
+        ?.let { clickAction.invoke(clickedView) }
+}
+
+/**
  * a new View.OnClickListener which prevents click shaking
  */
 fun View.setShakelessClickListener(threshold: Long, onClick: (View) -> Unit) {
