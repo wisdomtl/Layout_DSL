@@ -1323,6 +1323,14 @@ inline var TextView.hint_text_res: Int
         setHint(value)
     }
 
+inline var TextView.hint_text:String
+    get() {
+        return ""
+    }
+    set(value) {
+        setHint(value)
+    }
+
 inline var TextView.line_space_multiplier: Float
     get() {
         return -1f
