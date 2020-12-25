@@ -45,6 +45,37 @@ import kotlin.math.abs
 /**
  * the extension functions and field in this file help you to build layout dynamically,
  * which has a better performance than xml files and more readable than normal java and kotlin code
+ *
+ * using this dsl to build view in kotlin like the following:
+ * private val rootView by lazy {
+ *   ConstraintLayout {
+ *      layout_width = match_parent
+ *      layout_height = match_parent
+ *
+ *       ImageView {
+ *          layout_id = "ivBack"
+ *          layout_width = 40
+ *          layout_height = 40
+ *          margin_start = 20
+ *          margin_top = 20
+ *          src = R.drawable.ic_back_black
+ *          start_toStartOf = parent_id
+ *          top_toTopOf = parent_id
+ *          onClick = onBackClick
+ *       }
+ *
+ *       TextView {
+ *          layout_width = wrap_content
+ *          layout_height = wrap_content
+ *          text = "commit"
+ *          textSize = 30f
+ *          layout_visibility = gone
+ *          textStyle = bold
+ *          align_vertical_to = "ivBack"
+ *          center_horizontal = true
+ *       }
+ *   }
+ * }
  */
 //<editor-fold desc="widget creation function">
 /**
@@ -1635,9 +1666,9 @@ var View.shakelessClick: (View) -> Unit
         }
     }
 
-var RecyclerView.onItemClick: (View, Int, Float, Float) -> Unit
+var RecyclerView.onItemClick: (View, Int, Float, Float) -> Boolean
     get() {
-        return { _, _, _, _ -> }
+        return { _, _, _, _ -> false }
     }
     set(value) {
         setOnItemClickListener(value)
@@ -1925,7 +1956,7 @@ fun RecyclerView.setOnItemLongClickListener(listener: (View, Int, Float, Float) 
     })
 }
 
-fun RecyclerView.setOnItemClickListener(listener: (View, Int, Float, Float) -> Unit) {
+fun RecyclerView.setOnItemClickListener(listener: (View, Int, Float, Float) -> Boolean) {
     addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
         val gestureDetector = GestureDetector(context, object : GestureDetector.OnGestureListener {
             override fun onShowPress(e: MotionEvent?) {
@@ -1934,7 +1965,7 @@ fun RecyclerView.setOnItemClickListener(listener: (View, Int, Float, Float) -> U
             override fun onSingleTapUp(e: MotionEvent?): Boolean {
                 e?.let {
                     findChildViewUnder(it.x, it.y)?.let { child ->
-                        listener(
+                        return listener(
                             child,
                             getChildAdapterPosition(child),
                             it.x - child.left,
