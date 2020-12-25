@@ -954,6 +954,17 @@ inline var View.start_toStartOf: String
         }
     }
 
+inline var View.start_toStartViewOf: View?
+    get() {
+        return null
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            startToStart = value?.id ?: -1
+            startToEnd = -1
+        }
+    }
+
 inline var View.start_toEndOf: String
     get() {
         return ""
@@ -961,6 +972,17 @@ inline var View.start_toEndOf: String
     set(value) {
         layoutParams = layoutParams.append {
             startToEnd = value.toLayoutId()
+            startToStart = -1
+        }
+    }
+
+inline var View.start_toEndViewOf: View?
+    get() {
+        return null
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            startToEnd = value?.id ?: -1
             startToStart = -1
         }
     }
@@ -976,6 +998,17 @@ inline var View.top_toBottomOf: String
         }
     }
 
+inline var View.top_toBottomViewOf: View?
+    get() {
+        return null
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            topToBottom = value?.id ?: -1
+            topToTop = -1
+        }
+    }
+
 inline var View.top_toTopOf: String
     get() {
         return ""
@@ -983,6 +1016,17 @@ inline var View.top_toTopOf: String
     set(value) {
         layoutParams = layoutParams.append {
             topToTop = value.toLayoutId()
+            topToBottom = -1
+        }
+    }
+
+inline var View.top_toTopViewOf: View?
+    get() {
+        return null
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            topToTop = value?.id ?: -1
             topToBottom = -1
         }
     }
@@ -998,6 +1042,17 @@ inline var View.end_toEndOf: String
         }
     }
 
+inline var View.end_toEndViewOf: View?
+    get() {
+        return null
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            endToEnd = value?.id ?: -1
+            endToStart = -1
+        }
+    }
+
 inline var View.end_toStartOf: String
     get() {
         return ""
@@ -1005,6 +1060,17 @@ inline var View.end_toStartOf: String
     set(value) {
         layoutParams = layoutParams.append {
             endToStart = value.toLayoutId()
+            endToEnd = -1
+        }
+    }
+
+inline var View.end_toStartViewOf: View?
+    get() {
+        return null
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            endToStart = value?.id ?: -1
             endToEnd = -1
         }
     }
@@ -1020,6 +1086,17 @@ inline var View.bottom_toBottomOf: String
         }
     }
 
+inline var View.bottom_toBottomViewOf: View?
+    get() {
+        return null
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            bottomToBottom = value?.id ?: -1
+            bottomToTop = -1
+        }
+    }
+
 inline var View.bottom_toTopOf: String
     get() {
         return ""
@@ -1027,6 +1104,17 @@ inline var View.bottom_toTopOf: String
     set(value) {
         layoutParams = layoutParams.append {
             bottomToTop = value.toLayoutId()
+            bottomToBottom = -1
+        }
+    }
+
+inline var View.bottom_toTopViewOf: View?
+    get() {
+        return null
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            bottomToTop = value?.id ?: -1
             bottomToBottom = -1
         }
     }
