@@ -1721,7 +1721,7 @@ fun <T : View> AppCompatActivity.find(id: String): T? = findViewById(id.toLayout
 fun ConstraintLayout.buildChain(
     startView: View,
     views: List<View>,
-    endView: View,
+    endView: View?,
     orientation: Int,
     outMarginStart: Int,
     outMarinEnd:Int,
@@ -1762,14 +1762,14 @@ fun ConstraintLayout.buildChain(
     ConstraintProperties(preView)
         .connect(
             endSide,
-            if (isEndViewParent) ConstraintProperties.PARENT_ID else endView.id,
+            if (isEndViewParent) ConstraintProperties.PARENT_ID else endView?.id ?: ConstraintSet.UNSET,
             if (isEndViewParent) endSide else startSide,
             outMarinEnd
         )
         .apply()
 }
 
-fun View.isChildOf(view: View) = view.findViewById<View>(this.id) != null
+fun View.isChildOf(view: View?) = view?.findViewById<View>(this.id) != null
 
 
 fun <T> View.observe(liveData: LiveData<T>?, action: (T) -> Unit) {
