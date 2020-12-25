@@ -24,10 +24,7 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.*
 import androidx.constraintlayout.helper.widget.Flow
 import androidx.constraintlayout.helper.widget.Layer
-import androidx.constraintlayout.widget.ConstraintHelper
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintProperties
-import androidx.constraintlayout.widget.Guideline
+import androidx.constraintlayout.widget.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MarginLayoutParamsCompat
 import androidx.core.widget.NestedScrollView
@@ -318,6 +315,24 @@ inline fun ConstraintLayout.Guideline(
             ContextThemeWrapper(context, style)
         ) else Guideline(context)
     return guideline.apply(init).also { if (autoAdd) addView(it) }
+}
+
+/**
+ * create [Barrier] instance within a [ConstraintLayout]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [Barrier] into [ConstraintLayout] automatically
+ * @param init set attributes for this view in this lambda
+ */
+inline fun ConstraintLayout.Barrier(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: Barrier.() -> Unit
+): Barrier {
+    val barrier =
+        if (style != null) Barrier(
+            ContextThemeWrapper(context, style)
+        ) else Barrier(context)
+    return barrier.apply(init).also { if (autoAdd) addView(it) }
 }
 
 /**
@@ -1125,6 +1140,7 @@ inline var View.height_percentage: Float
         }
     }
 
+
 inline var View.background_color: String
     get() {
         return ""
@@ -1497,7 +1513,7 @@ inline var Flow.flow_wrapMode: Int
         setWrapMode(value)
     }
 
-inline var Flow.reference_ids: List<String>
+inline var ConstraintHelper.reference_ids: List<String>
     get() {
         return emptyList()
     }
@@ -1505,6 +1521,13 @@ inline var Flow.reference_ids: List<String>
         referencedIds = value.map { it.toLayoutId() }.toIntArray()
     }
 
+inline var Barrier.barrier_direction: Int
+    get() {
+        return -1
+    }
+    set(value) {
+        type = value
+    }
 
 var View.onClick: (View) -> Unit
     get() {
@@ -1593,6 +1616,13 @@ val constraint_parent = ConstraintProperties.PARENT_ID
 val spread = ConstraintLayout.LayoutParams.CHAIN_SPREAD
 val packed = ConstraintLayout.LayoutParams.CHAIN_PACKED
 val spread_inside = ConstraintLayout.LayoutParams.CHAIN_SPREAD_INSIDE
+
+val barrier_left = Barrier.LEFT
+val barrier_top = Barrier.TOP
+val barrier_right = Barrier.RIGHT
+val barrier_bottom = Barrier.BOTTOM
+val barrier_start = Barrier.START
+val barrier_end = Barrier.END
 
 val wrap_none = Flow.WRAP_NONE
 val wrap_chain = Flow.WRAP_CHAIN
