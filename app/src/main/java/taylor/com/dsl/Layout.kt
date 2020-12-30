@@ -792,51 +792,51 @@ inline var View.layout_id: String
     set(value) {
         id = value.toLayoutId()
     }
-inline var View.padding_top: Int
+inline var View.padding_top: Float
     get() {
-        return 0
+        return 0f
     }
     set(value) {
-        setPadding(paddingLeft, value.dp, paddingRight, paddingBottom)
+        setPadding(paddingLeft, value.dp.toInt(), paddingRight, paddingBottom)
     }
 
-inline var View.padding_bottom: Int
+inline var View.padding_bottom: Float
     get() {
-        return 0
+        return 0f
     }
     set(value) {
-        setPadding(paddingLeft, paddingTop, paddingRight, value.dp)
+        setPadding(paddingLeft, paddingTop, paddingRight, value.dp.toInt())
     }
 
-inline var View.padding_start: Int
+inline var View.padding_start: Float
     get() {
-        return 0
+        return 0f
     }
     set(value) {
-        setPadding(value.dp, paddingTop, paddingRight, paddingBottom)
+        setPadding(value.dp.toInt(), paddingTop, paddingRight, paddingBottom)
     }
 
-inline var View.padding_end: Int
+inline var View.padding_end: Float
     get() {
-        return 0
+        return 0f
     }
     set(value) {
-        setPadding(paddingLeft, paddingTop, value.dp, paddingBottom)
+        setPadding(paddingLeft, paddingTop, value.dp.toInt(), paddingBottom)
     }
-inline var View.padding: Int
+inline var View.padding: Float
     get() {
-        return 0
+        return 0f
     }
     set(value) {
-        setPadding(value.dp, value.dp, value.dp, value.dp)
+        setPadding(value.dp.toInt(), value.dp.toInt(), value.dp.toInt(), value.dp.toInt())
     }
-inline var View.layout_width: Int
+inline var View.layout_width: Float
     get() {
-        return 0
+        return 0f
     }
     set(value) {
-        val w = if (value > 0) value.dp else value
-        val h = layoutParams?.height ?: 0
+        val w = (if (value > 0) value.dp else value).toInt()
+        val h = (layoutParams?.height ?: 0).toInt()
         layoutParams = if (layoutParams == null) {
             ViewGroup.MarginLayoutParams(w, h)
         } else {
@@ -847,14 +847,14 @@ inline var View.layout_width: Int
         }
     }
 
-inline var View.layout_height: Int
+inline var View.layout_height: Float
     get() {
-        return 0
+        return 0f
     }
     set(value) {
 
-        val w = layoutParams?.width ?: 0
-        val h = if (value > 0) value.dp else value
+        val w = (layoutParams?.width ?: 0).toInt()
+        val h = (if (value > 0) value.dp else value).toInt()
         layoutParams = if (layoutParams == null) {
             ViewGroup.MarginLayoutParams(w, h)
         } else {
@@ -1296,43 +1296,43 @@ inline var View.background_drawable_state_list: List<Pair<IntArray, Drawable>>
         }
     }
 
-inline var View.margin_top: Int
+inline var View.margin_top: Float
     get() {
-        return -1
+        return -1f
     }
     set(value) {
         (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
-            topMargin = value.dp
+            topMargin = value.dp.toInt()
         }
     }
 
-inline var View.margin_bottom: Int
+inline var View.margin_bottom: Float
     get() {
-        return -1
+        return -1f
     }
     set(value) {
         (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
-            bottomMargin = value.dp
+            bottomMargin = value.dp.toInt()
         }
     }
 
-inline var View.margin_start: Int
+inline var View.margin_start: Float
     get() {
-        return -1
+        return -1f
     }
     set(value) {
         (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
-            MarginLayoutParamsCompat.setMarginStart(this, value.dp)
+            MarginLayoutParamsCompat.setMarginStart(this, value.dp.toInt())
         }
     }
 
-inline var View.margin_end: Int
+inline var View.margin_end: Float
     get() {
-        return -1
+        return -1f
     }
     set(value) {
         (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
-            MarginLayoutParamsCompat.setMarginEnd(this, value.dp)
+            MarginLayoutParamsCompat.setMarginEnd(this, value.dp.toInt())
         }
     }
 
@@ -1458,7 +1458,7 @@ inline var TextView.hint_text_res: Int
         setHint(value)
     }
 
-inline var TextView.hint_text:String
+inline var TextView.hint_text: String
     get() {
         return ""
     }
@@ -1843,7 +1843,7 @@ fun ConstraintLayout.buildChain(
     endView: View?,
     orientation: Int,
     outMarginStart: Int,
-    outMarinEnd:Int,
+    outMarinEnd: Int,
     innerMargin: Int
 ) {
     if (views.isNullOrEmpty()) return
@@ -1881,7 +1881,8 @@ fun ConstraintLayout.buildChain(
     ConstraintProperties(preView)
         .connect(
             endSide,
-            if (isEndViewParent) ConstraintProperties.PARENT_ID else endView?.id ?: ConstraintSet.UNSET,
+            if (isEndViewParent) ConstraintProperties.PARENT_ID else endView?.id
+                ?: ConstraintSet.UNSET,
             if (isEndViewParent) endSide else startSide,
             outMarinEnd
         )
@@ -1896,6 +1897,7 @@ fun <T> View.observe(liveData: LiveData<T>?, action: (T) -> Unit) {
         liveData?.observe(owner, Observer { action(it) })
     }
 }
+
 fun RecyclerView.setOnItemLongClickListener(listener: (View, Int, Float, Float) -> Unit) {
     addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
         val gestureDetector = GestureDetector(context, object : GestureDetector.OnGestureListener {
