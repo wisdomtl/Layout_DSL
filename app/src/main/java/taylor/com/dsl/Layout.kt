@@ -1337,6 +1337,47 @@ inline var View.margin_end: Number
         }
     }
 
+
+inline var View.gone_margin_end: Number
+    get() {
+        return -1
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            goneEndMargin = value.dp
+        }
+    }
+
+inline var View.gone_margin_start: Number
+    get() {
+        return -1
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            goneStartMargin = value.dp
+        }
+    }
+
+inline var View.gone_margin_top: Number
+    get() {
+        return -1
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            goneTopMargin = value.dp
+        }
+    }
+
+inline var View.gone_margin_bottom: Number
+    get() {
+        return -1
+    }
+    set(value) {
+        layoutParams = layoutParams.append {
+            goneBottomMargin = value.dp
+        }
+    }
+
 inline var View.guide_percentage: Float
     get() {
         return -1f
