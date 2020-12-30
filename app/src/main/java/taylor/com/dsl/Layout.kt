@@ -1297,43 +1297,43 @@ inline var View.background_drawable_state_list: List<Pair<IntArray, Drawable>>
         }
     }
 
-inline var View.margin_top: Float
+inline var View.margin_top: Number
     get() {
-        return -1f
+        return -1
     }
     set(value) {
         (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
-            topMargin = value.dp.toInt()
+            topMargin = value.dp
         }
     }
 
-inline var View.margin_bottom: Float
+inline var View.margin_bottom: Number
     get() {
-        return -1f
+        return -1
     }
     set(value) {
         (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
-            bottomMargin = value.dp.toInt()
+            bottomMargin = value.dp
         }
     }
 
-inline var View.margin_start: Float
+inline var View.margin_start: Number
     get() {
-        return -1f
+        return -1
     }
     set(value) {
         (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
-            MarginLayoutParamsCompat.setMarginStart(this, value.dp.toInt())
+            MarginLayoutParamsCompat.setMarginStart(this, value.dp)
         }
     }
 
-inline var View.margin_end: Float
+inline var View.margin_end: Number
     get() {
-        return -1f
+        return -1
     }
     set(value) {
         (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
-            MarginLayoutParamsCompat.setMarginEnd(this, value.dp.toInt())
+            MarginLayoutParamsCompat.setMarginEnd(this, value.dp)
         }
     }
 
