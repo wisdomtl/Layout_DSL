@@ -41,6 +41,7 @@ import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.launch
 import kotlin.math.abs
+import kotlin.math.max
 
 /**
  * the extension functions and field in this file help you to build layout dynamically,
@@ -792,51 +793,51 @@ inline var View.layout_id: String
     set(value) {
         id = value.toLayoutId()
     }
-inline var View.padding_top: Float
+inline var View.padding_top: Number
     get() {
-        return 0f
+        return 0
     }
     set(value) {
-        setPadding(paddingLeft, value.dp.toInt(), paddingRight, paddingBottom)
+        setPadding(paddingLeft, value.dp, paddingRight, paddingBottom)
     }
 
-inline var View.padding_bottom: Float
+inline var View.padding_bottom: Number
     get() {
-        return 0f
+        return 0
     }
     set(value) {
-        setPadding(paddingLeft, paddingTop, paddingRight, value.dp.toInt())
+        setPadding(paddingLeft, paddingTop, paddingRight, value.dp)
     }
 
-inline var View.padding_start: Float
+inline var View.padding_start: Number
     get() {
-        return 0f
+        return 0
     }
     set(value) {
-        setPadding(value.dp.toInt(), paddingTop, paddingRight, paddingBottom)
+        setPadding(value.dp, paddingTop, paddingRight, paddingBottom)
     }
 
-inline var View.padding_end: Float
+inline var View.padding_end: Number
     get() {
-        return 0f
+        return 0
     }
     set(value) {
-        setPadding(paddingLeft, paddingTop, value.dp.toInt(), paddingBottom)
+        setPadding(paddingLeft, paddingTop, value.dp, paddingBottom)
     }
-inline var View.padding: Float
+inline var View.padding: Number
     get() {
-        return 0f
+        return 0
     }
     set(value) {
-        setPadding(value.dp.toInt(), value.dp.toInt(), value.dp.toInt(), value.dp.toInt())
+        setPadding(value.dp, value.dp, value.dp, value.dp)
     }
-inline var View.layout_width: Float
+inline var View.layout_width: Number
     get() {
-        return 0f
+        return 0
     }
     set(value) {
-        val w = (if (value > 0) value.dp else value).toInt()
-        val h = (layoutParams?.height ?: 0).toInt()
+        val w = max(value.dp,0)
+        val h = layoutParams?.height ?: 0
         layoutParams = if (layoutParams == null) {
             ViewGroup.MarginLayoutParams(w, h)
         } else {
@@ -847,14 +848,14 @@ inline var View.layout_width: Float
         }
     }
 
-inline var View.layout_height: Float
+inline var View.layout_height: Number
     get() {
-        return 0f
+        return 0
     }
     set(value) {
 
-        val w = (layoutParams?.width ?: 0).toInt()
-        val h = (if (value > 0) value.dp else value).toInt()
+        val w = layoutParams?.width ?: 0
+        val h = max(value.dp,0)
         layoutParams = if (layoutParams == null) {
             ViewGroup.MarginLayoutParams(w, h)
         } else {
@@ -1693,8 +1694,8 @@ var RecyclerView.hasFixedSize: Boolean
 
 
 //<editor-fold desc="View layout constant">
-val match_parent = ViewGroup.LayoutParams.MATCH_PARENT.toFloat()
-val wrap_content = ViewGroup.LayoutParams.WRAP_CONTENT.toFloat()
+val match_parent = ViewGroup.LayoutParams.MATCH_PARENT
+val wrap_content = ViewGroup.LayoutParams.WRAP_CONTENT
 
 val visible = View.VISIBLE
 val gone = View.GONE
@@ -1790,22 +1791,26 @@ val parent_id = "0"
 
 //<editor-fold desc="layout helper function">
 val Int.dp: Int
-    get() {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            this.toFloat(),
-            Resources.getSystem().displayMetrics
-        ).toInt()
-    }
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this.toFloat(),
+        Resources.getSystem().displayMetrics
+    ).toInt()
+
 
 val Float.dp: Float
-    get() {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            this.toFloat(),
-            Resources.getSystem().displayMetrics
-        )
-    }
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this,
+        Resources.getSystem().displayMetrics
+    )
+
+val Number.dp: Int
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this.toFloat(),
+        Resources.getSystem().displayMetrics
+    ).toInt()
 
 fun ViewGroup.MarginLayoutParams.toConstraintLayoutParam() =
     ConstraintLayout.LayoutParams(width, height).also { it ->
