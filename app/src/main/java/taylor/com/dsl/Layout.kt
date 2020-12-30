@@ -836,7 +836,7 @@ inline var View.layout_width: Number
         return 0
     }
     set(value) {
-        val w = max(value.dp,0)
+        val w = if (value.dp > 0) value.dp else value.toInt()
         val h = layoutParams?.height ?: 0
         layoutParams = if (layoutParams == null) {
             ViewGroup.MarginLayoutParams(w, h)
@@ -855,7 +855,7 @@ inline var View.layout_height: Number
     set(value) {
 
         val w = layoutParams?.width ?: 0
-        val h = max(value.dp,0)
+        val h = if (value.dp > 0) value.dp else value.toInt()
         layoutParams = if (layoutParams == null) {
             ViewGroup.MarginLayoutParams(w, h)
         } else {
@@ -2044,7 +2044,7 @@ inline fun View.onChildViewClick(
     var clickedView: View? = null
     layoutId
         .map { id ->
-            find<View>(id)?.let { view ->
+            find<View>(id)?.takeIf { it.visibility == visible }?.let { view ->
                 view.getRelativeRectTo(this).also { rect ->
                     if (rect.contains(x.toInt(), y.toInt())) {
                         clickedView = view
@@ -2069,7 +2069,7 @@ inline fun View.onChildViewClick(
     var clickedView: View? = null
     layoutId
         .map { id ->
-            findViewById<View>(id)?.let { view ->
+            findViewById<View>(id)?.takeIf { it.visibility == visible }?.let { view ->
                 view.getRelativeRectTo(this).also { rect ->
                     if (rect.contains(x.toInt(), y.toInt())) {
                         clickedView = view
