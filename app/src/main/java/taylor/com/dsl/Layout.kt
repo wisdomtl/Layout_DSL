@@ -1693,8 +1693,8 @@ var RecyclerView.hasFixedSize: Boolean
 
 
 //<editor-fold desc="View layout constant">
-val match_parent = ViewGroup.LayoutParams.MATCH_PARENT
-val wrap_content = ViewGroup.LayoutParams.WRAP_CONTENT
+val match_parent = ViewGroup.LayoutParams.MATCH_PARENT.toFloat()
+val wrap_content = ViewGroup.LayoutParams.WRAP_CONTENT.toFloat()
 
 val visible = View.VISIBLE
 val gone = View.GONE
