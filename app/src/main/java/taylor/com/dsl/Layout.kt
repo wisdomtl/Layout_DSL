@@ -33,6 +33,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import androidx.viewpager2.widget.ViewPager2
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
@@ -1467,6 +1468,15 @@ inline var ImageView.src: Int
     set(value) {
         setImageResource(value)
     }
+
+inline var ImageView.vector_src: Int
+    get() {
+        return -1
+    }
+    set(value) {
+        background = VectorDrawableCompat.create(context.getResources(), value, null)
+    }
+
 
 inline var TextView.maxLength: Int
     get() {
