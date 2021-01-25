@@ -28,6 +28,7 @@ import androidx.constraintlayout.helper.widget.Layer
 import androidx.constraintlayout.widget.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MarginLayoutParamsCompat
+import androidx.core.view.ViewCompat
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -1279,6 +1280,15 @@ inline var View.background_res: Int
     }
     set(value) {
         setBackgroundResource(value)
+    }
+
+inline var View.background_vector: Int
+    get() {
+        return -1
+    }
+    set(value) {
+        val drawable = VectorDrawableCompat.create(context.getResources(), value, null)
+        background = drawable
     }
 
 inline var View.background_drawable: Drawable?
