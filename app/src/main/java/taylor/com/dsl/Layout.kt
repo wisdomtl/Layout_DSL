@@ -6,6 +6,7 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
@@ -28,20 +29,25 @@ import androidx.constraintlayout.widget.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MarginLayoutParamsCompat
 import androidx.core.widget.NestedScrollView
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import androidx.viewpager2.widget.ViewPager2
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.actor
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import kotlin.math.abs
-import kotlin.math.max
 
 /**
  * the extension functions and field in this file help you to build layout dynamically,
@@ -927,22 +933,20 @@ inline var View.weight: Float
         return 0f
     }
     set(value) {
-        layoutParams =
-            LinearLayout.LayoutParams(layoutParams.width, layoutParams.height).also { it ->
-                it.gravity = (layoutParams as? LinearLayout.LayoutParams)?.gravity ?: -1
-                it.weight = value
-            }
+        layoutParams = LinearLayout.LayoutParams(layoutParams.width, layoutParams.height).also { it ->
+            it.gravity = (layoutParams as? LinearLayout.LayoutParams)?.gravity ?: -1
+            it.weight = value
+        }
     }
 inline var View.layout_gravity: Int
     get() {
         return -1
     }
     set(value) {
-        layoutParams =
-            LinearLayout.LayoutParams(layoutParams.width, layoutParams.height).also { it ->
-                it.weight = (layoutParams as? LinearLayout.LayoutParams)?.weight ?: 0f
-                it.gravity = value
-            }
+        layoutParams = LinearLayout.LayoutParams(layoutParams.width, layoutParams.height).also { it ->
+            it.weight = (layoutParams as? LinearLayout.LayoutParams)?.weight ?: 0f
+            it.gravity = value
+        }
     }
 
 inline var View.toCircleOf: String
@@ -1468,6 +1472,15 @@ inline var ImageView.src: Int
         setImageResource(value)
     }
 
+inline var ImageView.vector_src: Int
+    get() {
+        return -1
+    }
+    set(value) {
+        val src = VectorDrawableCompat.create(context.getResources(), value, null)
+        setImageDrawable(src)
+    }
+
 inline var TextView.maxLength: Int
     get() {
         return 1
@@ -1543,7 +1556,10 @@ inline var TextView.fontFamily: Int
         return 1
     }
     set(value) {
-        typeface = ResourcesCompat.getFont(context, value)
+        try {
+            typeface = ResourcesCompat.getFont(context, value)
+        } catch (e: Resources.NotFoundException) {
+        }
     }
 
 inline var TextView.drawable_start: Int
@@ -1872,6 +1888,17 @@ fun String.toLayoutId(): Int {
     return abs(id)
 }
 
+fun DialogFragment.fullScreenMode(){
+    dialog?.window?.apply {
+        attributes?.apply {
+            width = WindowManager.LayoutParams.MATCH_PARENT
+            height= WindowManager.LayoutParams.MATCH_PARENT
+        }
+        decorView.setPadding(0,0,0,0)
+        setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    }
+}
+
 fun <T : View> View.find(id: String): T? = findViewById(id.toLayoutId())
 
 fun <T : View> AppCompatActivity.find(id: String): T? = findViewById(id.toLayoutId())
@@ -1927,8 +1954,7 @@ fun ConstraintLayout.buildChain(
     ConstraintProperties(preView)
         .connect(
             endSide,
-            if (isEndViewParent) ConstraintProperties.PARENT_ID else endView?.id
-                ?: ConstraintSet.UNSET,
+            if (isEndViewParent) ConstraintProperties.PARENT_ID else endView?.id ?: ConstraintSet.UNSET,
             if (isEndViewParent) endSide else startSide,
             outMarinEnd
         )
@@ -1936,7 +1962,6 @@ fun ConstraintLayout.buildChain(
 }
 
 fun View.isChildOf(view: View?) = view?.findViewById<View>(this.id) != null
-
 
 fun <T> View.observe(liveData: LiveData<T>?, action: (T) -> Unit) {
     (context as? LifecycleOwner)?.let { owner ->
@@ -2013,12 +2038,7 @@ fun RecyclerView.setOnItemClickListener(listener: (View, Int, Float, Float) -> B
             override fun onSingleTapUp(e: MotionEvent?): Boolean {
                 e?.let {
                     findChildViewUnder(it.x, it.y)?.let { child ->
-                        return listener(
-                            child,
-                            getChildAdapterPosition(child),
-                            it.x - child.left,
-                            it.y - child.top
-                        )
+                        return listener(child, getChildAdapterPosition(child), it.x - child.left, it.y - child.top)
                     }
                 }
                 return false
@@ -2028,21 +2048,11 @@ fun RecyclerView.setOnItemClickListener(listener: (View, Int, Float, Float) -> B
                 return false
             }
 
-            override fun onFling(
-                e1: MotionEvent?,
-                e2: MotionEvent?,
-                velocityX: Float,
-                velocityY: Float
-            ): Boolean {
+            override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
                 return false
             }
 
-            override fun onScroll(
-                e1: MotionEvent?,
-                e2: MotionEvent?,
-                distanceX: Float,
-                distanceY: Float
-            ): Boolean {
+            override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
                 return false
             }
 
@@ -2151,6 +2161,24 @@ fun View.setShakelessClickListener(threshold: Long, onClick: (View) -> Unit) {
                 Click(view, System.currentTimeMillis()) { onClick(view) }
             )
         }.autoDispose(this)
+    }
+}
+
+/**
+ * a debounce listener for [EditText]'s text change event
+ */
+fun EditText.setDebounceListener(timeoutMillis: Long, action: (CharSequence) -> Unit) {
+    val mainScope = MainScope()
+    val textChangeActor = mainScope.actor<CharSequence>(capacity = Channel.UNLIMITED) {
+        consumeAsFlow().debounce(timeoutMillis).collect { action.invoke(text) }
+    }.autoDispose(this)
+
+    onTextChange = textWatcher {
+        onTextChanged = change@{ text: CharSequence?, _: Int, _: Int, _: Int ->
+            mainScope.launch {
+                text.toString().trim().let { textChangeActor.send(it) }
+            }.autoDispose(this@setDebounceListener)
+        }
     }
 }
 
