@@ -3,6 +3,7 @@ package taylor.com.dsl
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Resources
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.Typeface
@@ -831,6 +832,7 @@ inline var View.padding_end: Number
     set(value) {
         setPadding(paddingLeft, paddingTop, value.dp, paddingBottom)
     }
+
 inline var View.padding: Number
     get() {
         return 0
@@ -838,6 +840,25 @@ inline var View.padding: Number
     set(value) {
         setPadding(value.dp, value.dp, value.dp, value.dp)
     }
+
+inline var View.padding_horizontal: Number
+    get() {
+        return 0
+    }
+    set(value) {
+        padding_start = value.dp
+        padding_end = value.dp
+    }
+
+inline var View.padding_vertical: Number
+    get() {
+        return 0
+    }
+    set(value) {
+        padding_top = value.dp
+        padding_bottom = value.dp
+    }
+
 inline var View.layout_width: Number
     get() {
         return 0
@@ -1351,6 +1372,27 @@ inline var View.margin_end: Number
         }
     }
 
+inline var View.margin_horizontal: Number
+    get() {
+        return -1
+    }
+    set(value) {
+        (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
+            MarginLayoutParamsCompat.setMarginEnd(this, value.dp)
+            MarginLayoutParamsCompat.setMarginStart(this, value.dp)
+        }
+    }
+
+inline var View.margin_vertical: Number
+    get() {
+        return -1
+    }
+    set(value) {
+        (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
+            topMargin = value.dp
+            bottomMargin = value.dp
+        }
+    }
 
 inline var View.gone_margin_end: Number
     get() {
@@ -1480,6 +1522,14 @@ inline var ImageView.src: Int
     }
     set(value) {
         setImageResource(value)
+    }
+
+inline var ImageView.bitmap: Bitmap?
+    get() {
+        return null
+    }
+    set(value) {
+        setImageBitmap(value)
     }
 
 inline var ImageView.vector_src: Int
