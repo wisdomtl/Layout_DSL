@@ -29,7 +29,6 @@ import androidx.constraintlayout.helper.widget.Layer
 import androidx.constraintlayout.widget.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MarginLayoutParamsCompat
-import androidx.core.view.ViewCompat
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -39,7 +38,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import androidx.viewpager2.widget.ViewPager2
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.channels.Channel
@@ -866,10 +864,10 @@ inline var View.layout_width: Number
     set(value) {
         val w = if (value.dp > 0) value.dp else value.toInt()
         val h = layoutParams?.height ?: 0
-        layoutParams = if (layoutParams == null) {
-            ViewGroup.MarginLayoutParams(w, h)
+        if (layoutParams == null) {
+            layoutParams = ViewGroup.MarginLayoutParams(w, h)
         } else {
-            layoutParams.append {
+            updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 width = w
                 height = h
             }
@@ -884,10 +882,10 @@ inline var View.layout_height: Number
 
         val w = layoutParams?.width ?: 0
         val h = if (value.dp > 0) value.dp else value.toInt()
-        layoutParams = if (layoutParams == null) {
-            ViewGroup.MarginLayoutParams(w, h)
+        if (layoutParams == null) {
+            layoutParams = ViewGroup.MarginLayoutParams(w, h)
         } else {
-            layoutParams.append {
+            updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 width = w
                 height = h
             }
@@ -955,9 +953,9 @@ inline var View.weight: Float
         return 0f
     }
     set(value) {
-        layoutParams = LinearLayout.LayoutParams(layoutParams.width, layoutParams.height).also { it ->
-            it.gravity = (layoutParams as? LinearLayout.LayoutParams)?.gravity ?: -1
-            it.weight = value
+        updateLayoutParams<LinearLayout.LayoutParams> {
+            gravity = (layoutParams as? LinearLayout.LayoutParams)?.gravity ?: -1
+            weight = value
         }
     }
 inline var View.layout_gravity: Int
@@ -965,9 +963,9 @@ inline var View.layout_gravity: Int
         return -1
     }
     set(value) {
-        layoutParams = LinearLayout.LayoutParams(layoutParams.width, layoutParams.height).also { it ->
-            it.weight = (layoutParams as? LinearLayout.LayoutParams)?.weight ?: 0f
-            it.gravity = value
+        updateLayoutParams<LinearLayout.LayoutParams> {
+            weight = (layoutParams as? LinearLayout.LayoutParams)?.weight ?: 0f
+            gravity = value
         }
     }
 
@@ -976,7 +974,7 @@ inline var View.toCircleOf: String
         return ""
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             circleConstraint = value.toLayoutId()
         }
     }
@@ -986,7 +984,7 @@ inline var View.circle_radius: Int
         return -1
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             circleRadius = value.dp
         }
     }
@@ -996,7 +994,7 @@ inline var View.circle_angle: Float
         return -1f
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             circleAngle = value
         }
     }
@@ -1006,7 +1004,7 @@ inline var View.start_toStartOf: String
         return ""
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             startToStart = value.toLayoutId()
             startToEnd = -1
         }
@@ -1017,7 +1015,7 @@ inline var View.start_toStartViewOf: View?
         return null
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             startToStart = value?.id ?: -1
             startToEnd = -1
         }
@@ -1028,7 +1026,7 @@ inline var View.start_toEndOf: String
         return ""
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             startToEnd = value.toLayoutId()
             startToStart = -1
         }
@@ -1039,7 +1037,7 @@ inline var View.start_toEndViewOf: View?
         return null
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             startToEnd = value?.id ?: -1
             startToStart = -1
         }
@@ -1050,7 +1048,7 @@ inline var View.top_toBottomOf: String
         return ""
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             topToBottom = value.toLayoutId()
             topToTop = -1
         }
@@ -1061,7 +1059,7 @@ inline var View.top_toBottomViewOf: View?
         return null
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             topToBottom = value?.id ?: -1
             topToTop = -1
         }
@@ -1072,7 +1070,7 @@ inline var View.top_toTopOf: String
         return ""
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             topToTop = value.toLayoutId()
             topToBottom = -1
         }
@@ -1083,7 +1081,8 @@ inline var View.top_toTopViewOf: View?
         return null
     }
     set(value) {
-        layoutParams = layoutParams.append {
+
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             topToTop = value?.id ?: -1
             topToBottom = -1
         }
@@ -1094,7 +1093,7 @@ inline var View.end_toEndOf: String
         return ""
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             endToEnd = value.toLayoutId()
             endToStart = -1
         }
@@ -1105,7 +1104,7 @@ inline var View.end_toEndViewOf: View?
         return null
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             endToEnd = value?.id ?: -1
             endToStart = -1
         }
@@ -1116,7 +1115,7 @@ inline var View.end_toStartOf: String
         return ""
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             endToStart = value.toLayoutId()
             endToEnd = -1
         }
@@ -1127,7 +1126,7 @@ inline var View.end_toStartViewOf: View?
         return null
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             endToStart = value?.id ?: -1
             endToEnd = -1
         }
@@ -1138,7 +1137,7 @@ inline var View.bottom_toBottomOf: String
         return ""
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             bottomToBottom = value.toLayoutId()
             bottomToTop = -1
         }
@@ -1149,7 +1148,7 @@ inline var View.bottom_toBottomViewOf: View?
         return null
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             bottomToBottom = value?.id ?: -1
             bottomToTop = -1
         }
@@ -1160,7 +1159,7 @@ inline var View.bottom_toTopOf: String
         return ""
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             bottomToTop = value.toLayoutId()
             bottomToBottom = -1
         }
@@ -1171,7 +1170,7 @@ inline var View.bottom_toTopViewOf: View?
         return null
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             bottomToTop = value?.id ?: -1
             bottomToBottom = -1
         }
@@ -1182,7 +1181,7 @@ inline var View.horizontal_chain_style: Int
         return -1
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             horizontalChainStyle = value
         }
     }
@@ -1192,7 +1191,7 @@ inline var View.vertical_chain_style: Int
         return -1
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             verticalChainStyle = value
         }
     }
@@ -1202,16 +1201,17 @@ inline var View.horizontal_bias: Float
         return -1f
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             horizontalBias = value
         }
     }
+
 inline var View.dimension_radio: String
     get() {
         return ""
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             dimensionRatio = value
         }
     }
@@ -1221,7 +1221,7 @@ inline var View.vertical_bias: Float
         return -1f
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             verticalBias = value
         }
     }
@@ -1269,7 +1269,7 @@ inline var View.width_percentage: Float
         return -1f
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
             matchConstraintPercentWidth = value
         }
@@ -1280,12 +1280,11 @@ inline var View.height_percentage: Float
         return -1f
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             height = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
             matchConstraintPercentHeight = value
         }
     }
-
 
 inline var View.background_color: String
     get() {
@@ -1337,7 +1336,7 @@ inline var View.margin_top: Number
         return -1
     }
     set(value) {
-        (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
+        updateLayoutParams<ViewGroup.MarginLayoutParams> {
             topMargin = value.dp
         }
     }
@@ -1347,7 +1346,7 @@ inline var View.margin_bottom: Number
         return -1
     }
     set(value) {
-        (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
+        updateLayoutParams<ViewGroup.MarginLayoutParams> {
             bottomMargin = value.dp
         }
     }
@@ -1357,7 +1356,7 @@ inline var View.margin_start: Number
         return -1
     }
     set(value) {
-        (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
+        updateLayoutParams<ViewGroup.MarginLayoutParams> {
             MarginLayoutParamsCompat.setMarginStart(this, value.dp)
         }
     }
@@ -1367,7 +1366,7 @@ inline var View.margin_end: Number
         return -1
     }
     set(value) {
-        (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
+        updateLayoutParams<ViewGroup.MarginLayoutParams> {
             MarginLayoutParamsCompat.setMarginEnd(this, value.dp)
         }
     }
@@ -1377,7 +1376,7 @@ inline var View.margin_horizontal: Number
         return -1
     }
     set(value) {
-        (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
+        updateLayoutParams<ViewGroup.MarginLayoutParams> {
             MarginLayoutParamsCompat.setMarginEnd(this, value.dp)
             MarginLayoutParamsCompat.setMarginStart(this, value.dp)
         }
@@ -1388,7 +1387,7 @@ inline var View.margin_vertical: Number
         return -1
     }
     set(value) {
-        (layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
+        updateLayoutParams<ViewGroup.MarginLayoutParams> {
             topMargin = value.dp
             bottomMargin = value.dp
         }
@@ -1399,7 +1398,7 @@ inline var View.gone_margin_end: Number
         return -1
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             goneEndMargin = value.dp
         }
     }
@@ -1409,7 +1408,7 @@ inline var View.gone_margin_start: Number
         return -1
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             goneStartMargin = value.dp
         }
     }
@@ -1419,7 +1418,7 @@ inline var View.gone_margin_top: Number
         return -1
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             goneTopMargin = value.dp
         }
     }
@@ -1429,7 +1428,7 @@ inline var View.gone_margin_bottom: Number
         return -1
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             goneBottomMargin = value.dp
         }
     }
@@ -1439,7 +1438,7 @@ inline var View.guide_percentage: Float
         return -1f
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             guidePercent = value
         }
     }
@@ -1449,7 +1448,7 @@ inline var View.guide_orientation: Int
         return 1
     }
     set(value) {
-        layoutParams = layoutParams.append {
+        updateLayoutParams<ConstraintLayout.LayoutParams> {
             orientation = value
         }
     }
@@ -1937,10 +1936,21 @@ fun ViewGroup.MarginLayoutParams.toConstraintLayoutParam() =
         it.marginEnd = this.marginEnd
     }
 
-fun ViewGroup.LayoutParams.append(set: ConstraintLayout.LayoutParams.() -> Unit) =
-    (this as? ConstraintLayout.LayoutParams)?.apply(set)
-        ?: (this as? ViewGroup.MarginLayoutParams)?.toConstraintLayoutParam()?.apply(set)
+/**
+ * update LayoutParams according to it's type
+ */
+inline fun <reified T : ViewGroup.LayoutParams> View.updateLayoutParams(block: T.() -> Unit) {
+    layoutParams = (layoutParams as? T)?.apply(block) ?: kotlin.run {
+        val lp = ViewGroup.LayoutParams(layoutParams.width, layoutParams.height)
+        new<T>(lp).apply(block)
+    }
+}
 
+/**
+ * create a new instance of [T] with [params]
+ */
+inline fun <reified T> new(vararg params: Any): T =
+    T::class.java.getDeclaredConstructor(*params.map { it::class.java }.toTypedArray()).also { it.isAccessible = true }.newInstance(*params)
 
 fun String.toLayoutId(): Int {
     var id = hashCode()
@@ -1948,13 +1958,13 @@ fun String.toLayoutId(): Int {
     return abs(id)
 }
 
-fun DialogFragment.fullScreenMode(){
+fun DialogFragment.fullScreenMode() {
     dialog?.window?.apply {
         attributes?.apply {
             width = WindowManager.LayoutParams.MATCH_PARENT
-            height= WindowManager.LayoutParams.MATCH_PARENT
+            height = WindowManager.LayoutParams.MATCH_PARENT
         }
-        decorView.setPadding(0,0,0,0)
+        decorView.setPadding(0, 0, 0, 0)
         setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 }
@@ -2014,7 +2024,8 @@ fun ConstraintLayout.buildChain(
     ConstraintProperties(preView)
         .connect(
             endSide,
-            if (isEndViewParent) ConstraintProperties.PARENT_ID else endView?.id ?: ConstraintSet.UNSET,
+            if (isEndViewParent) ConstraintProperties.PARENT_ID else endView?.id
+                ?: ConstraintSet.UNSET,
             if (isEndViewParent) endSide else startSide,
             outMarinEnd
         )
@@ -2098,7 +2109,12 @@ fun RecyclerView.setOnItemClickListener(listener: (View, Int, Float, Float) -> B
             override fun onSingleTapUp(e: MotionEvent?): Boolean {
                 e?.let {
                     findChildViewUnder(it.x, it.y)?.let { child ->
-                        return listener(child, getChildAdapterPosition(child), it.x - child.left, it.y - child.top)
+                        return listener(
+                            child,
+                            getChildAdapterPosition(child),
+                            it.x - child.left,
+                            it.y - child.top
+                        )
                     }
                 }
                 return false
@@ -2108,11 +2124,21 @@ fun RecyclerView.setOnItemClickListener(listener: (View, Int, Float, Float) -> B
                 return false
             }
 
-            override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+            override fun onFling(
+                e1: MotionEvent?,
+                e2: MotionEvent?,
+                velocityX: Float,
+                velocityY: Float
+            ): Boolean {
                 return false
             }
 
-            override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+            override fun onScroll(
+                e1: MotionEvent?,
+                e2: MotionEvent?,
+                distanceX: Float,
+                distanceY: Float
+            ): Boolean {
                 return false
             }
 
@@ -2271,7 +2297,8 @@ fun Job.autoDispose(view: View?): Job {
 fun <T> SendChannel<T>.autoDispose(view: View?): SendChannel<T> {
     view ?: return this
 
-    val isAttached = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && view.isAttachedToWindow || view.windowToken != null
+    val isAttached =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && view.isAttachedToWindow || view.windowToken != null
     val listener = object : View.OnAttachStateChangeListener {
         override fun onViewDetachedFromWindow(v: View?) {
             close()

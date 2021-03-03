@@ -67,6 +67,7 @@ class FirstFragment : Fragment() {
             }
 
             TextView(R.style.myTextView) {
+                layout_id = "tvCommit"
                 layout_width = wrap_content
                 layout_height = wrap_content
                 text = "commit"
@@ -114,7 +115,7 @@ class FirstFragment : Fragment() {
                 layout_height = 1
                 margin_top = 10
                 background_color = "#eeeeee"
-                top_toBottomOf = "ivBack"
+                top_toBottomOf = "tvCommit"
             }
 
             Layer {
@@ -138,6 +139,7 @@ class FirstFragment : Fragment() {
                 src = R.drawable.diamond_tag
                 start_toStartOf = "ivBack"
                 top_toBottomOf = "vDivider"
+                margin_top =  10
                 onClick = { _: View ->
                     commitLiveData.postValue(true)
                 }
@@ -280,6 +282,7 @@ class FirstFragment : Fragment() {
                 layout_width = match_parent
                 layout_height = wrap_content
                 top_toBottomOf = "tvTime"
+                bottom_toTopOf = "tvOk"
                 onItemClick = onListItemClick
                 margin_top = 10
                 onItemLongClick = onItemLongClickListener
