@@ -864,13 +864,9 @@ inline var View.layout_width: Number
     set(value) {
         val w = if (value.dp > 0) value.dp else value.toInt()
         val h = layoutParams?.height ?: 0
-        if (layoutParams == null) {
-            layoutParams = ViewGroup.MarginLayoutParams(w, h)
-        } else {
-            updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                width = w
-                height = h
-            }
+        updateLayoutParams<ViewGroup.LayoutParams> {
+            width = w
+            height = h
         }
     }
 
@@ -879,16 +875,11 @@ inline var View.layout_height: Number
         return 0
     }
     set(value) {
-
         val w = layoutParams?.width ?: 0
         val h = if (value.dp > 0) value.dp else value.toInt()
-        if (layoutParams == null) {
-            layoutParams = ViewGroup.MarginLayoutParams(w, h)
-        } else {
-            updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                width = w
-                height = h
-            }
+        updateLayoutParams<ViewGroup.LayoutParams> {
+            width = w
+            height = h
         }
     }
 
@@ -1941,7 +1932,9 @@ fun ViewGroup.MarginLayoutParams.toConstraintLayoutParam() =
  */
 inline fun <reified T : ViewGroup.LayoutParams> View.updateLayoutParams(block: T.() -> Unit) {
     layoutParams = (layoutParams as? T)?.apply(block) ?: kotlin.run {
-        val lp = ViewGroup.LayoutParams(layoutParams.width, layoutParams.height)
+        val width = layoutParams?.width ?: 0
+        val height = layoutParams?.height ?: 0
+        val lp = ViewGroup.LayoutParams(width,height)
         new<T>(lp).apply(block)
     }
 }
