@@ -844,8 +844,8 @@ inline var View.padding_horizontal: Number
         return 0
     }
     set(value) {
-        padding_start = value.dp
-        padding_end = value.dp
+        padding_start = value
+        padding_end = value
     }
 
 inline var View.padding_vertical: Number
@@ -853,8 +853,8 @@ inline var View.padding_vertical: Number
         return 0
     }
     set(value) {
-        padding_top = value.dp
-        padding_bottom = value.dp
+        padding_top = value
+        padding_bottom = value
     }
 
 inline var View.layout_width: Number
