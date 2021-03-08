@@ -2471,7 +2471,7 @@ inline fun shape(init: GradientDrawable.() -> Unit) = GradientDrawable().apply(i
  * helper class for set stroke for [GradientDrawable]
  */
 data class Stroke(
-    var width: Int = 0,
+    var width: Number = 0f,
     var color: String = "#000000",
     var dashWidth: Float = 0f,
     var dashGap: Float = 0f
