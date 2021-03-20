@@ -38,15 +38,14 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import androidx.viewpager2.widget.ViewPager2
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
+import com.bumptech.glide.Glide
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.actor
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 /**
@@ -2307,6 +2306,27 @@ fun <T> SendChannel<T>.autoDispose(view: View?): SendChannel<T> {
     }
     return this
 }
+
+val View.viewScope: CoroutineScope
+    get() {
+        val key = "ViewScope".hashCode()
+        var scope = getTag(key) as? CoroutineScope
+        if (scope == null) {
+            scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+            tag = key
+            val listener = object : View.OnAttachStateChangeListener {
+                override fun onViewAttachedToWindow(v: View?) {
+                }
+
+                override fun onViewDetachedFromWindow(v: View?) {
+                    scope.cancel()
+                }
+
+            }
+            addOnAttachStateChangeListener(listener)
+        }
+        return scope
+    }
 
 
 /**
