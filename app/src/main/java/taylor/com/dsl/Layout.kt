@@ -2101,11 +2101,12 @@ fun RecyclerView.setOnItemClickListener(listener: (View, Int, Float, Float) -> B
             override fun onSingleTapUp(e: MotionEvent?): Boolean {
                 e?.let {
                     findChildViewUnder(it.x, it.y)?.let { child ->
+                        val realY = if (child.top >= 0) it.y - child.top else it.y
                         return listener(
                             child,
                             getChildAdapterPosition(child),
                             it.x - child.left,
-                            it.y - child.top
+                            realY
                         )
                     }
                 }
