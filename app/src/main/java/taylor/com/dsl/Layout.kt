@@ -2067,11 +2067,13 @@ fun RecyclerView.setOnItemLongClickListener(listener: (View, Int, Float, Float) 
             override fun onLongPress(e: MotionEvent?) {
                 e?.let {
                     findChildViewUnder(it.x, it.y)?.let { child ->
+                        val realX = if (child.left >= 0 ) it.x - child.left else it.x
+                        val realY = if (child.top >= 0) it.y - child.top else it.y
                         listener(
                             child,
                             getChildAdapterPosition(child),
-                            it.x - child.left,
-                            it.y - child.top
+                            realX,
+                            realY
                         )
                     }
                 }
@@ -2101,11 +2103,12 @@ fun RecyclerView.setOnItemClickListener(listener: (View, Int, Float, Float) -> B
             override fun onSingleTapUp(e: MotionEvent?): Boolean {
                 e?.let {
                     findChildViewUnder(it.x, it.y)?.let { child ->
+                        val realX = if (child.left >= 0 ) it.x - child.left else it.x
                         val realY = if (child.top >= 0) it.y - child.top else it.y
                         return listener(
                             child,
                             getChildAdapterPosition(child),
-                            it.x - child.left,
+                            realX,
                             realY
                         )
                     }
