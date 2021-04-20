@@ -1,4 +1,4 @@
-package taylor.com.views
+package test.taylor.com.taylorcode.ui.one
 
 import android.content.Context
 import android.graphics.*
@@ -7,6 +7,8 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageView
@@ -21,16 +23,64 @@ class OneViewGroup @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     private val drawableMap = HashMap<Int, Drawable>()
     private val drawables = mutableListOf<Drawable>()
+    private var gestureDetector: GestureDetector? = null
 
     fun addDrawable(drawable: Drawable) {
         drawables.add(drawable)
         drawableMap[drawable.layoutId] = drawable
     }
 
-    fun <T> findDrawable(id: String):T? = drawableMap[id.toLayoutId()] as? T
+    /**
+     * find [Drawable] by id
+     */
+    fun <T> findDrawable(id: String): T? = drawableMap[id.toLayoutId()] as? T
+
+    /**
+     * set item click listener for [OneViewGroup] whick detect child [Drawable]'s click event
+     */
+    fun setOnItemClickListener(onItemClickListener: (String) -> Unit) {
+        gestureDetector = GestureDetector(context, object : GestureDetector.OnGestureListener {
+            override fun onShowPress(e: MotionEvent?) {
+            }
+
+            override fun onSingleTapUp(e: MotionEvent?): Boolean {
+                e?.let {
+                    findDrawableUnder(e.x, e.y)?.let { onItemClickListener.invoke(it.layoutIdString) }
+                }
+                return true
+            }
+
+            override fun onDown(e: MotionEvent?): Boolean {
+                return true
+            }
+
+            override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+                return false
+            }
+
+            override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+                return false
+            }
+
+            override fun onLongPress(e: MotionEvent?) {
+            }
+        })
+    }
+
+    /**
+     * find child [Drawable] according to coordinate
+     */
+    private fun findDrawableUnder(x: Float, y: Float): Drawable? {
+        drawables.forEach {
+            if (it.rect.contains(x.toInt(), y.toInt())) {
+                return it
+            }
+        }
+        return null
+    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        measureChildren(widthMeasureSpec,heightMeasureSpec)
+        measureChildren(widthMeasureSpec, heightMeasureSpec)
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         drawables.forEach { it.doMeasure(widthMeasureSpec, heightMeasureSpec) }
     }
@@ -50,6 +100,13 @@ class OneViewGroup @JvmOverloads constructor(context: Context, attrs: AttributeS
         drawables.forEach { it.doDraw(canvas) }
     }
 
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        return gestureDetector?.onTouchEvent(event) ?: super.onTouchEvent(event)
+    }
+
+    /**
+     * get the top of [drawable] relative to the [OneViewGroup]
+     */
     private fun getChildTop(drawable: Drawable, parentHeight: Int): Int {
         val parentId = parent_id.toLayoutId()
         return when {
@@ -81,6 +138,9 @@ class OneViewGroup @JvmOverloads constructor(context: Context, attrs: AttributeS
         }
     }
 
+    /**
+     * get the left of [drawable] relative to the [OneViewGroup]
+     */
     private fun getChildLeft(drawable: Drawable, parentWidth: Int): Int {
         val parentId = parent_id.toLayoutId()
         return when {
@@ -112,6 +172,9 @@ class OneViewGroup @JvmOverloads constructor(context: Context, attrs: AttributeS
         }
     }
 
+    /**
+     * anything could be draw in [OneViewGroup]
+     */
     interface Drawable {
         /**
          * the measured dimension of [Drawable]
@@ -126,11 +189,18 @@ class OneViewGroup @JvmOverloads constructor(context: Context, attrs: AttributeS
         var layoutRight: Int
         var layoutTop: Int
         var layoutBottom: Int
+        val rect: Rect
+            get() = Rect(layoutLeft, layoutTop, layoutRight, layoutBottom)
 
         /**
-         * the unique id of this [Drawable]
+         * the unique id of this [Drawable] in int
          */
         var layoutId: Int
+
+        /**
+         * the unique id of this [Drawable] in string
+         */
+        var layoutIdString: String
 
         /**
          * the relative position of this [Drawable] to another
@@ -194,6 +264,23 @@ class OneViewGroup @JvmOverloads constructor(context: Context, attrs: AttributeS
     }
 }
 
+
+///**
+// * one kind of drawable shows image
+// */
+//class Image : OneViewGroup.Drawable() {
+//    override fun measure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+//    }
+//
+//    override fun draw(canvas: Canvas?) {
+//    }
+//}
+
+//<editor-fold desc="sub-class of Drawable">
+/**
+ * one kind of [OneViewGroup.Drawable] shows image
+ * and it is a special [ImageView] implemented [OneViewGroup.Drawable]
+ */
 class ImageDrawable @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : AppCompatImageView(context, attrs, defStyleAttr), OneViewGroup.Drawable {
     override var leftPercent: Float = -1f
     override var topPercent: Float = -1f
@@ -224,6 +311,7 @@ class ImageDrawable @JvmOverloads constructor(context: Context, attrs: Attribute
         get() = bottom
     override var layoutId: Int = 0
         get() = id
+    override var layoutIdString: String = ""
     override var layoutPaddingStart: Int = 0
         get() = paddingStart
     override var layoutPaddingEnd: Int = 0
@@ -253,7 +341,7 @@ class ImageDrawable @JvmOverloads constructor(context: Context, attrs: Attribute
 }
 
 /**
- *  one kind of drawable shows text
+ *  one kind of [OneViewGroup.Drawable] shows text
  */
 class Text : OneViewGroup.Drawable {
     private var textPaint: TextPaint? = null
@@ -284,6 +372,7 @@ class Text : OneViewGroup.Drawable {
     override var layoutTop: Int = 0
     override var layoutBottom: Int = 0
     override var layoutId: Int = 0
+    override var layoutIdString: String = ""
     override var leftPercent: Float = -1f
     override var topPercent: Float = -1f
     override var startToStartOf: Int = -1
@@ -334,7 +423,6 @@ class Text : OneViewGroup.Drawable {
         setRect(left, top, right, bottom)
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun doDraw(canvas: Canvas?) {
         canvas?.save()
         canvas?.translate(layoutLeft.toFloat(), layoutTop.toFloat())
@@ -344,12 +432,11 @@ class Text : OneViewGroup.Drawable {
         canvas?.restore()
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun drawBackground(canvas: Canvas?) {
         if (drawableShape == null) return
         val _shape = drawableShape!!
         if (_shape.radius != 0f) {
-            canvas?.drawRoundRect(0f, 0f, layoutMeasuredWidth.toFloat(), layoutMeasuredHeight.toFloat(), _shape.radius, _shape.radius, shapePaint!!)
+            canvas?.drawRoundRect(RectF(0f, 0f, layoutMeasuredWidth.toFloat(), layoutMeasuredHeight.toFloat()), _shape.radius, _shape.radius, shapePaint!!)
         } else if (_shape.corners != null) {
             _shape.path!!.apply {
                 addRoundRect(
@@ -362,6 +449,7 @@ class Text : OneViewGroup.Drawable {
         }
     }
 }
+//</editor-fold>
 
 /**
  * a round rect shows in background
@@ -402,9 +490,7 @@ inline fun OneViewGroup.image(init: ImageDrawable.() -> Unit) = ImageDrawable(co
 }
 
 
-/**
- * helper function for building [OneViewGroup] in DSL style
- */
+//<editor-fold desc="helper function for building Drawable by DSL">
 fun OneViewGroup.drawableShape(init: Shape.() -> Unit): Shape = Shape().apply(init)
 
 fun Shape.corners(init: Shape.Corners.() -> Unit): Shape.Corners = Shape.Corners().apply(init)
@@ -481,6 +567,7 @@ inline var OneViewGroup.Drawable.drawable_layout_id: String
         return ""
     }
     set(value) {
+        layoutIdString = value
         layoutId = value.toLayoutId()
     }
 
@@ -644,3 +731,4 @@ inline var Shape.radius: Float
     set(value) {
         radius = value.dp
     }
+//</editor-fold>
