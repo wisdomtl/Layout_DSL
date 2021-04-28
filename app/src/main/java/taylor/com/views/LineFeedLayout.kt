@@ -34,7 +34,7 @@ class LineFeedLayout @JvmOverloads constructor(
             var remainWidth = width
             (0 until childCount).map { getChildAt(it) }.forEach { child ->
                 val lp = child.layoutParams as MarginLayoutParams
-                if (isNewLine(lp, child, remainWidth, horizontalGap)) {
+                if (isNewLine(lp, child, remainWidth)) {
                     remainWidth = width - child.measuredWidth
                     height += (lp.topMargin + lp.bottomMargin + child.measuredHeight + verticalGap)
                 } else {
@@ -56,7 +56,7 @@ class LineFeedLayout @JvmOverloads constructor(
         var count = 0
         (0 until childCount).map { getChildAt(it) }.forEach { child ->
             val lp = child.layoutParams as MarginLayoutParams
-            if (isNewLine(lp, child, r - l - left, horizontalGap)) {
+            if (isNewLine(lp, child, r - l - left)) {
                 left = -lp.leftMargin
                 top = lastBottom
                 lastBottom = 0
@@ -87,9 +87,8 @@ class LineFeedLayout @JvmOverloads constructor(
         lp: MarginLayoutParams,
         child: View,
         remainWidth: Int,
-        horizontalGap: Int
     ): Boolean {
         val childOccupation = lp.leftMargin + child.measuredWidth + lp.rightMargin
-        return (childOccupation + horizontalGap > remainWidth) && (childOccupation > remainWidth)
+        return childOccupation > remainWidth
     }
 }
