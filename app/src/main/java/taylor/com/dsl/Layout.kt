@@ -1,5 +1,6 @@
 package taylor.com.dsl
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Resources
@@ -27,6 +28,7 @@ import androidx.appcompat.widget.*
 import androidx.constraintlayout.helper.widget.Flow
 import androidx.constraintlayout.helper.widget.Layer
 import androidx.constraintlayout.widget.*
+import androidx.coordinatorlayout.widget.ViewGroupUtils
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MarginLayoutParamsCompat
@@ -1996,6 +1998,49 @@ fun DialogFragment.fullScreenMode() {
 fun <T : View> View.find(id: String): T? = findViewById(id.toLayoutId())
 
 fun <T : View> AppCompatActivity.find(id: String): T? = findViewById(id.toLayoutId())
+
+@SuppressLint("RestrictedApi")
+fun View.expand(dx: Int, dy: Int) {
+    class MultiTouchDelegate(bound: Rect? = null, delegateView: View) : TouchDelegate(bound, delegateView) {
+        val delegateViewMap = mutableMapOf<View, Rect>()
+        private var delegateView: View? = null
+
+        override fun onTouchEvent(event: MotionEvent): Boolean {
+            val x = event.x.toInt()
+            val y = event.y.toInt()
+            var handled = false
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    delegateView = findDelegateViewUnder(x, y)
+                }
+                MotionEvent.ACTION_CANCEL -> {
+                    delegateView = null
+                }
+            }
+            delegateView?.let {
+                event.setLocation(it.width / 2f, it.height / 2f)
+                handled = it.dispatchTouchEvent(event)
+            }
+            return handled
+        }
+
+        private fun findDelegateViewUnder(x: Int, y: Int): View? {
+            delegateViewMap.forEach { entry -> if (entry.value.contains(x, y)) return entry.key }
+            return null
+        }
+    }
+
+    val parentView = parent as? ViewGroup
+    parentView ?: return
+
+    if (parentView.touchDelegate == null) parentView.touchDelegate = MultiTouchDelegate(delegateView = this)
+    post {
+        val rect = Rect()
+        ViewGroupUtils.getDescendantRect(parentView, this, rect)
+        rect.inset(- dx, - dy)
+        (parentView.touchDelegate as? MultiTouchDelegate)?.delegateViewMap?.put(this, rect)
+    }
+}
 
 /**
  * build a horizontal or vertical chain in [ConstraintLayout]

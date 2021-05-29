@@ -85,7 +85,7 @@ class FirstFragment : Fragment() {
                     gradientType = gradient_type_linear
                     orientation = gradient_left_right
                     gradient_colors = listOf("#ffff00", "#0000ff")
-                    strokeAttr = Stroke(5, "#000000", 2f, 3f)
+                    strokeAttr = Stroke(5, "#000000", dashWidth = 2f, dashGap = 3f)
                     color_state_list = listOf(
                         intArrayOf(state_enable) to "#007EFF",
                         intArrayOf(state_disable) to "#FDB2DA"
@@ -139,7 +139,7 @@ class FirstFragment : Fragment() {
                 src = R.drawable.diamond_tag
                 start_toStartOf = "ivBack"
                 top_toBottomOf = "vDivider"
-                margin_top =  10
+                margin_top = 10
                 onClick = { _: View ->
                     commitLiveData.postValue(true)
                 }
@@ -310,7 +310,7 @@ class FirstFragment : Fragment() {
 
     private val onItemLongClickListener = { v: View, i: Int, x: Float, y: Float ->
         adapter.myBean?.get(i)?.let {
-            Log.v("ttaylor","on item(${it.name}) long click  ")
+            Log.v("ttaylor", "on item(${it.name}) long click  ")
         }
         Unit
     }
