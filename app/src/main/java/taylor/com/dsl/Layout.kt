@@ -23,6 +23,7 @@ import android.view.*
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.*
 import androidx.constraintlayout.helper.widget.Flow
@@ -99,9 +100,8 @@ inline fun ViewGroup.TextView(
     init: AppCompatTextView.() -> Unit
 ): TextView {
     val textView =
-        if (style != null) AppCompatTextView(
-            ContextThemeWrapper(context, style)
-        ) else AppCompatTextView(context)
+        if (style != null) AppCompatTextView(ContextThemeWrapper(context, style))
+        else AppCompatTextView(context)
     return textView.apply(init).also { if (autoAdd) addView(it) }
 }
 
@@ -1537,7 +1537,7 @@ inline var ImageView.vector_src: Int
         return -1
     }
     set(value) {
-        val src = VectorDrawableCompat.create(context.getResources(), value, null)
+        val src = AppCompatResources.getDrawable(this.context,value)
         setImageDrawable(src)
     }
 
