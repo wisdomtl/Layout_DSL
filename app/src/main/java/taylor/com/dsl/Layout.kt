@@ -522,7 +522,7 @@ inline var View.background_color_res: Int
         return -1
     }
     set(value) {
-        setBackgroundColor(ContextCompat.getColor(context,value))
+        setBackgroundColor(ContextCompat.getColor(context, value))
     }
 
 inline var View.background_res: Int
@@ -530,7 +530,7 @@ inline var View.background_res: Int
         return -1
     }
     set(value) {
-        setBackgroundResource(value)
+        background = AppCompatResources.getDrawable(context, value)
     }
 
 inline var View.background_vector: Int
@@ -751,7 +751,7 @@ inline var ImageView.src: Int
         return -1
     }
     set(value) {
-        setImageResource(value)
+        setImageDrawable(AppCompatResources.getDrawable(context, value))
     }
 
 inline var ImageView.bitmap: Bitmap?
@@ -762,15 +762,6 @@ inline var ImageView.bitmap: Bitmap?
         setImageBitmap(value)
     }
 
-inline var ImageView.vector_src: Int
-    get() {
-        return -1
-    }
-    set(value) {
-        val src = AppCompatResources.getDrawable(this.context,value)
-        setImageDrawable(src)
-    }
-
 inline var TextView.maxLength: Int
     get() {
         return 1
@@ -779,7 +770,7 @@ inline var TextView.maxLength: Int
         filters = arrayOf<InputFilter>(LengthFilter(value))
     }
 
-inline var TextView.textRes: Int
+inline var TextView.text_res: Int
     get() {
         return -1
     }
@@ -800,7 +791,7 @@ inline var TextView.hint_color_res: Int
         return -1
     }
     set(value) {
-        setHintTextColor(ContextCompat.getColor(context,value))
+        setHintTextColor(ContextCompat.getColor(context, value))
     }
 
 inline var TextView.hint_text_res: Int
@@ -854,7 +845,7 @@ inline var TextView.text_color_res: Int
         return -1
     }
     set(value) {
-        setTextColor(ContextCompat.getColor(context,value))
+        setTextColor(ContextCompat.getColor(context, value))
     }
 
 inline var TextView.fontFamily: Int

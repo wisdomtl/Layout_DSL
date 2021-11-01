@@ -18,6 +18,9 @@ inline var GradientDrawable.solid_color: String
         setColor(Color.parseColor(value))
     }
 
+/**
+ * color res should be returned by ContextCompat.getColor()
+ */
 inline var GradientDrawable.solid_color_res: Int
     get() {
         return -1
@@ -50,6 +53,9 @@ inline var GradientDrawable.gradient_colors: List<String>
         colors = value.map { Color.parseColor(it) }.toIntArray()
     }
 
+/**
+ * color res should be returned by ContextCompat.getColor()
+ */
 inline var GradientDrawable.gradient_colors_res: List<Int>
     get() {
         return emptyList()
@@ -129,6 +135,9 @@ inline var GradientDrawable.color_state_list: List<Pair<IntArray, String>>
         color = ColorStateList(states.toTypedArray(), colors.toIntArray())
     }
 
+/**
+ * color res should be returned by ContextCompat.getColor()
+ */
 inline var GradientDrawable.color_state_list_res: List<Pair<IntArray, Int>>
     get() {
         return listOf(intArrayOf() to 0)
@@ -151,6 +160,7 @@ inline fun shape(init: GradientDrawable.() -> Unit) = GradientDrawable().apply(i
 
 /**
  * helper class for set stroke for [GradientDrawable]
+ * color res should be returned by ContextCompat.getColor()
  */
 data class Stroke(
     var width: Number = 0f,
