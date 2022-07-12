@@ -689,6 +689,7 @@ inline var View.layout_visibility: Int
         return -1
     }
     set(value) {
+
         visibility = value
     }
 
