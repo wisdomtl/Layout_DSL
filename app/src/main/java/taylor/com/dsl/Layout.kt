@@ -755,6 +755,14 @@ inline var ImageView.src: Int
         setImageDrawable(AppCompatResources.getDrawable(context, value))
     }
 
+inline var ImageView.imageDrawable: Drawable?
+    get() {
+        return null
+    }
+    set(value) {
+        setImageDrawable(value)
+    }
+
 inline var ImageView.bitmap: Bitmap?
     get() {
         return null
