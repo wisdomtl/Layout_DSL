@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Guideline
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 
@@ -303,6 +304,23 @@ inline fun ViewGroup.ViewPager2(
         ) else ViewPager2(context)
     return viewPager2.apply(init).also { if (autoAdd) addView(it) }
 }
+/**
+ * create [FragmentContainerView] instance within a [ViewGroup]
+ * @param style an style int value defined in xml
+ * @param autoAdd whether add [FragmentContainerView] into [ViewGroup] automatically
+ * @param init set attributes for this view in this lambda
+ */
+inline fun ViewGroup.FragmentContainerView(
+    style: Int? = null,
+    autoAdd: Boolean = true,
+    init: FragmentContainerView.() -> Unit
+): FragmentContainerView {
+    val fragmentContainerView =
+        if (style != null) FragmentContainerView(
+            ContextThemeWrapper(context, style)
+        ) else FragmentContainerView(context)
+    return fragmentContainerView.apply(init).also { if (autoAdd) addView(it) }
+}
 
 /**
  * create [Guideline] instance within a [ConstraintLayout]
@@ -574,6 +592,23 @@ inline fun Context.RecyclerView(
     return recyclerView.apply(init)
 }
 
+
+/**
+ * create [FragmentContainerView] instance
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Context.FragmentContainerView(
+    style: Int? = null,
+    init: FragmentContainerView.() -> Unit
+): FragmentContainerView {
+    val fragmentContainerView =
+        if (style != null) FragmentContainerView(
+            ContextThemeWrapper(this, style)
+        ) else FragmentContainerView(this)
+    return fragmentContainerView.apply(init)
+}
+
 /**
  * create [ConstraintLayout] instance within [Fragment]
  * @param style an style int value defined in xml
@@ -756,3 +791,17 @@ inline fun Fragment.RecyclerView(
     ) else RecyclerView(it)
 }?.apply(init)
 
+
+/**
+ * create [FragmentContainerView] instance within [Fragment]
+ * @param style an style int value defined in xml
+ * @param init set attributes for this view in this lambda
+ */
+inline fun Fragment.FragmentContainerView(
+    style: Int? = null,
+    init: FragmentContainerView.() -> Unit
+): FragmentContainerView? = context?.let {
+    if (style != null) FragmentContainerView(
+        ContextThemeWrapper(it, style)
+    ) else FragmentContainerView(it)
+}?.apply(init)

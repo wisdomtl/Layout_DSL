@@ -12,6 +12,7 @@ import android.view.*
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.helper.widget.Flow
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintProperties
 import androidx.constraintlayout.widget.ConstraintSet
@@ -205,6 +206,63 @@ fun ConstraintLayout.buildChain(
             outMarinEnd
         )
         .apply()
+}
+
+
+fun ViewGroup.setOnItemClickListener(listener: (View, Int) -> Unit) {
+    val gestureDetector = GestureDetector(context, object : GestureDetector.OnGestureListener {
+        private val touchFrame = Rect()
+        fun pointToPosition(x: Int, y: Int): Int {
+            (0 until childCount).map { getChildAt(it) }.forEachIndexed { index, child ->
+                if (child.visibility == visible  && child !is Flow) {
+                    child.getHitRect(touchFrame)
+                    if (touchFrame.contains(x, y)) return index
+                }
+            }
+            return -1
+        }
+
+        override fun onShowPress(e: MotionEvent?) {
+        }
+
+        override fun onSingleTapUp(e: MotionEvent?): Boolean {
+            e ?: return false
+            pointToPosition(e.x.toInt(), e.y.toInt()).takeIf { it != -1 }?.let { index ->
+                listener(getChildAt(index), index)
+            }
+            return false
+        }
+
+        override fun onDown(e: MotionEvent?): Boolean {
+            return true
+        }
+
+        override fun onFling(
+            e1: MotionEvent?,
+            e2: MotionEvent?,
+            velocityX: Float,
+            velocityY: Float
+        ): Boolean {
+            return false
+        }
+
+        override fun onScroll(
+            e1: MotionEvent?,
+            e2: MotionEvent?,
+            distanceX: Float,
+            distanceY: Float
+        ): Boolean {
+            return false
+        }
+
+        override fun onLongPress(e: MotionEvent?) {
+        }
+    })
+
+    setOnTouchListener { _, event ->
+        gestureDetector.onTouchEvent(event)
+       true
+    }
 }
 
 fun View.isChildOf(view: View?) = view?.findViewById<View>(this.id) != null
